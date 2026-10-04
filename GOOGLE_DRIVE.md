@@ -98,3 +98,22 @@ Google. Importar las credenciales OAuth actualizadas solo en la aplicacion local
 Los instaladores no tienen firma Authenticode de produccion. Compilar en GitHub
 no garantiza que Smart App Control permita ejecutar un instalador descargado
 sin firma. No desactivar automaticamente las protecciones del equipo.
+
+### Resultado Verificado
+
+La ejecucion [37227097787](https://github.com/elektrorate/Mori/actions/runs/37227097787)
+compilo el commit `c3e34fc8662ff63e5e408d358234e8df5fd907f2` correctamente:
+
+- JavaScript: 35 pruebas aprobadas.
+- Windows: 10 pruebas Rust aprobadas, compilacion release y empaquetado NSIS/MSI.
+- Android local: siete pruebas Java aprobadas, APK compilado y firma verificada.
+- Subida real y borrado local en Android: confirmados por el usuario en su telefono.
+- OAuth, subida real y ejecucion del instalador en Windows: pendientes de prueba.
+
+Los instaladores descargados quedan en `artifacts/windows/` (excluido de Git):
+
+- `nsis/Mori_4.4.0_x64-setup.exe`
+- `msi/Mori_4.4.0_x64_en-US.msi`
+
+El APK de pruebas Android esta en
+`android/app/build/outputs/apk/debug/Mori v4.4.0.apk`.
