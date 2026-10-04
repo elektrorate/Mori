@@ -26,6 +26,8 @@ import { cleanUrl } from "./utils/urlUtils.js";
 import { getUserAgent } from "./utils/index.js";
 import { translations } from "./i18n/index.js";
 import { safeSetHistory } from "./modules/history.js";
+import { shouldUseDrive, downloadToDrive, validateDriveResult, mergeDriveFiles, driveText } from "./modules/drive.js";
+import { cleanDownloadUrl, buildDownloadHeaders } from "./downloader/headers.js";
 
 let currentLang = localStorage.getItem("mori_lang") || "en";
 let lang = translations[currentLang] || translations.en;
@@ -414,10 +416,15 @@ function renderDownloadList(result) {
 
 async function triggerDownload(dlItem, title, idx) {
   const btn = document.getElementById(`dl_btn_${idx}`);
+  if (btn?.disabled) return;
+  if (btn) btn.disabled = true;
+  let useDrive;
+  try { useDrive = await shouldUseDrive(); }
+  catch (error) { if (btn) btn.disabled = false; window.showToast(error.message); return; }
   if (btn) {
     btn.classList.add("downloading");
     const badge = btn.querySelector(".dl-badge");
-    if (badge) badge.textContent = lang["label-saving"] || "SAVING...";
+    if (badge) badge.textContent = useDrive ? driveText("Uploading to Drive...", "Subiendo a Drive...") : lang["label-saving"] || "SAVING...";
   }
 
   const filename = generateFilename(title, dlItem.type, idx);
@@ -755,6 +762,16 @@ async function triggerDownload(dlItem, title, idx) {
     return;
   }
 
+  if (useDrive) {
+    try {
+      finalUrl = cleanDownloadUrl(finalUrl);
+      const result = await downloadToDrive({ url: finalUrl, fileName: filename, headers: buildDownloadHeaders(finalUrl, targetUrl, dlItem.url), sourceUrl: targetUrl, title });
+      window.showToast(result.localDeleted ? driveText("Saved in Drive", "Guardado en Drive") : driveText("Saved in Drive; local cleanup pending. See Settings.", "Guardado en Drive; limpieza local pendiente. Consulta Ajustes."));
+      finishDownloadUI();
+    } catch (error) { window.onDownloadFailed(filename, error.message); }
+    return;
+  }
+
   if (window.MoriShareBridge?.downloadFile) {
     let dlHeaders = {
       Referer: targetUrl,
@@ -787,6 +804,8 @@ async function triggerDownload(dlItem, title, idx) {
       JSON.stringify(dlHeaders),
       title,
     );
+  } else {
+    window.onDownloadFailed(filename, "Native download support is unavailable");
   }
 }
 
@@ -933,6 +952,7 @@ function saveHistory(result, url) {
       timestamp: Date.now(),
       downloads: result.downloads || (existing ? existing.downloads : []),
       localFiles: existing ? existing.localFiles || [] : [],
+      driveFiles: mergeDriveFiles(existing?.driveFiles, result.driveFiles),
       localUri: existing ? existing.localUri : null,
       localThumbnail: existing ? existing.localThumbnail : null,
     };
@@ -985,14 +1005,31 @@ function updateHistorySavedFile(filename, savedPath) {
   }
 }
 
-window.onDownloadComplete = function (filename, savedPath) {
-  if (savedPath) updateHistorySavedFile(filename, savedPath);
-  window.showToast(`${lang["toast-saved"] || "Saved:"} ${filename}`);
+window.onDownloadComplete = function (filename, savedPath, driveResult) {
+  const cloud = driveResult || (typeof savedPath === "object" ? savedPath : null) || (typeof filename === "object" ? filename : null);
+  if (cloud?.driveFileId) {
+    try {
+      const result = validateDriveResult(cloud);
+      window.dispatchEvent(new CustomEvent("mori_drive_file_saved", { detail: { url: targetUrl, ...result, title: activeResult?.title || result.fileName } }));
+      window.showToast(result.localDeleted ? driveText("Saved in Drive", "Guardado en Drive") : driveText("Saved in Drive; local cleanup pending. See Settings.", "Guardado en Drive; limpieza local pendiente. Consulta Ajustes."));
+    } catch (error) { window.onDownloadFailed(filename, error.message); return; }
+  } else if ((typeof savedPath === "string" && savedPath.startsWith("https://drive.google.com/")) || localStorage.getItem("mori_drive_enabled") === "true") {
+    window.onDownloadFailed(filename, "Drive upload verification result is missing");
+    return;
+  } else {
+    if (savedPath) updateHistorySavedFile(filename, savedPath);
+    window.showToast(`${lang["toast-saved"] || "Saved:"} ${filename}`);
+  }
 
+  finishDownloadUI();
+};
+
+function finishDownloadUI() {
   const downloadBadgeText = (
     lang["label-download"] || "DOWNLOAD"
   ).toUpperCase();
   document.querySelectorAll(".dl-item-btn").forEach((btn) => {
+    btn.disabled = false;
     btn.classList.remove("downloading");
     const badge = btn.querySelector(".dl-badge");
     if (badge) badge.textContent = downloadBadgeText;
@@ -1003,7 +1040,7 @@ window.onDownloadComplete = function (filename, savedPath) {
   if (!isMulti) {
     setTimeout(() => window.dismissPanel(), 1000);
   }
-};
+}
 
 window.onDownloadFailed = function (filename, error) {
   window.showToast(`${lang["toast-failed"] || "Failed:"} ${error}`);
@@ -1011,6 +1048,7 @@ window.onDownloadFailed = function (filename, error) {
     lang["label-download"] || "DOWNLOAD"
   ).toUpperCase();
   document.querySelectorAll(".dl-item-btn").forEach((btn) => {
+    btn.disabled = false;
     btn.classList.remove("downloading");
     const badge = btn.querySelector(".dl-badge");
     if (badge) badge.textContent = downloadBadgeText;

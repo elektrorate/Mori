@@ -1,4 +1,17 @@
 /* Settings Page (Menus, Transitions, Live BG, Storage) */
+.settings-item.drive-settings { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+.drive-description, .drive-status { margin: 0; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.drive-description { color: var(--text-secondary); }
+.drive-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.drive-toggle-row, .drive-pending-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.drive-toggle-row .toggle-switch { flex-shrink: 0; }
+.drive-pending-row { margin-top: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.drive-pending-row span { min-width: 0; }
+.drive-settings button:disabled { opacity: .5; cursor: default; }
+.drive-settings [hidden] { display: none; }
+.drive-settings input:disabled + label { opacity: .5; cursor: default; }
+.drive-settings input:focus-visible + label { outline: 2px solid var(--primary); outline-offset: 3px; }
+.dbd-item-cancel[hidden] { display: none; }
 
 /* Custom Selects & Info Val for Settings */
 .info-val.selectable {

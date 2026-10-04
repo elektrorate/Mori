@@ -10,6 +10,8 @@ import hi from "./locales/hi.js";
 
 export const translations = {
   en,
+  // Drive has inline Spanish strings; legacy screens retain a complete English fallback.
+  es: { ...en },
   id,
   ja,
   ko,

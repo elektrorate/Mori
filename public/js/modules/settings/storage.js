@@ -7,6 +7,7 @@ import {
   normalizeSavedPath,
 } from "../../utils/index.js";
 import { translations } from "../../i18n/index.js";
+import { initDriveSettings } from "../drive.js";
 import { showConfirm } from "../modals.js";
 import { renderHistory } from "../../ui.js";
 import { onHistoryItemClick, onHistoryDeleteClick, safeSetHistory } from "../history.js";
@@ -200,6 +201,7 @@ export async function clearCacheSilently() {
  * Initializes download path pickers, storage event listeners, cache logic, and wipe dialogs
  */
 export function initStorageSettings() {
+  initDriveSettings(showToast);
   const isAndroid = window.Capacitor?.getPlatform?.() === "android";
   const isIos = window.Capacitor?.getPlatform?.() === "ios";
   const isDesktop = Boolean(

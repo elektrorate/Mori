@@ -1,6 +1,7 @@
 // download.js — main download flow (analyze + batch download)
 import { translations, t } from "../i18n/index.js";
 import { convertImagesToPdf } from "../utils/pdfHelper.js";
+import { shouldUseDrive, savePdfToDrive, driveText } from "./drive.js";
 import {
   Filesystem,
   showToast,
@@ -200,6 +201,7 @@ downloadBtn.addEventListener("click", async () => {
             const history = JSON.parse(
               localStorage.getItem("mori_history") || "[]",
             );
+            const existingBatchItem = history.find((h) => cleanUrl(h.url) === cleanUrl(bUrl));
             const newHistoryItem = {
               id: Date.now() + i + Math.floor(Math.random() * 1000),
               url: bUrl,
@@ -208,6 +210,11 @@ downloadBtn.addEventListener("click", async () => {
               author: data.result.author || "Creator",
               thumbnail: (typeof data.result.thumbnail === "string" && data.result.thumbnail.startsWith("data:") && data.result.thumbnail.length > 25000) ? "" : (data.result.thumbnail || ""),
               downloads: data.result.downloads || [],
+              driveFiles: existingBatchItem?.driveFiles || [],
+              localFiles: existingBatchItem?.localFiles || [],
+              localUri: existingBatchItem?.localUri || null,
+              favorite: existingBatchItem?.favorite || false,
+              favTimestamp: existingBatchItem?.favTimestamp || 0,
               date: new Date().toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -216,6 +223,7 @@ downloadBtn.addEventListener("click", async () => {
               timestamp: Date.now() + i,
             };
 
+            if (existingBatchItem) history.splice(history.indexOf(existingBatchItem), 1);
             history.unshift(newHistoryItem);
             safeSetHistory(history);
             if (typeof updateGreeting === "function") updateGreeting();
@@ -292,6 +300,12 @@ downloadBtn.addEventListener("click", async () => {
               statusEl.textContent = t("status-downloading");
             }
 
+            let downloadFailed = false;
+            const downloadItem = async (...args) => {
+              const result = await startNativeDownload(...args);
+              if (!result?.success) downloadFailed = true;
+              return result;
+            };
             const downloadsList = item.data.result?.downloads || [];
             const itemTitle = decodeHtmlEntities(
               item.data.result?.title || "Media",
@@ -315,7 +329,7 @@ downloadBtn.addEventListener("click", async () => {
                   }
                   return;
                 }
-                await startNativeDownload(
+                await downloadItem(
                   primaryVideo.url,
                   primaryVideo.type,
                   itemTitle,
@@ -333,7 +347,7 @@ downloadBtn.addEventListener("click", async () => {
                     return;
                   }
                   const dlObj = downloadsList[0];
-                  await startNativeDownload(
+                  await downloadItem(
                     dlObj.url,
                     dlObj.type,
                     itemTitle,
@@ -348,7 +362,9 @@ downloadBtn.addEventListener("click", async () => {
                       /\.(jpg|jpeg|png|webp)/i.test(d.url),
                   );
                   if (imageItems.length > 1) {
+                    let drivePdf = false;
                     try {
+                      drivePdf = await shouldUseDrive();
                       const imageUrls = imageItems.map((img) => img.url);
                       const pdfBuffer = await convertImagesToPdf(imageUrls);
 
@@ -367,7 +383,12 @@ downloadBtn.addEventListener("click", async () => {
                           .trim()
                           .substring(0, 60) || "Mori_Batch_Album";
                       const pdfFileName = `${sanitizedTitle}.pdf`;
-                      if (
+                      if (drivePdf || await shouldUseDrive()) {
+                        drivePdf = true;
+                        if (statusEl) statusEl.textContent = driveText("Uploading to Drive...", "Subiendo a Drive...");
+                        const result = await savePdfToDrive(pdfBuffer, { fileName: pdfFileName, sourceUrl: item.url, title: itemTitle });
+                        if (!result.localDeleted) showToast(driveText("Saved in Drive; local cleanup pending. See Settings.", "Guardado en Drive; limpieza local pendiente. Consulta Ajustes."));
+                      } else if (
                         window.Capacitor?.isNativePlatform?.() &&
                         Filesystem
                       ) {
@@ -401,28 +422,34 @@ downloadBtn.addEventListener("click", async () => {
                         URL.revokeObjectURL(a.href);
                       }
                     } catch (pdfErr) {
-                      console.warn("PDF generation failed, fallback:", pdfErr);
-                      for (let dIdx = 0; dIdx < downloadsList.length; dIdx++) {
-                        if (batchDownloadCancelled) {
-                          if (statusEl) {
-                            statusEl.className = "batch-item-status cancelled";
-                            statusEl.textContent = t("status-cancelled");
+                      // Drive failures are pending native jobs, not a request for a different download.
+                      if (drivePdf || localStorage.getItem("mori_drive_enabled") === "true") {
+                        downloadFailed = true;
+                        showToast(pdfErr.message);
+                      } else {
+                        console.warn("PDF generation failed, fallback:", pdfErr);
+                        for (let dIdx = 0; dIdx < downloadsList.length; dIdx++) {
+                          if (batchDownloadCancelled) {
+                            if (statusEl) {
+                              statusEl.className = "batch-item-status cancelled";
+                              statusEl.textContent = t("status-cancelled");
+                            }
+                            return;
                           }
-                          return;
+                          const dlObj = downloadsList[dIdx];
+                          const titleWithIdx =
+                            downloadsList.length > 1
+                              ? `${itemTitle}_${dIdx + 1}`
+                              : itemTitle;
+                          await downloadItem(
+                            dlObj.url,
+                            dlObj.type,
+                            titleWithIdx,
+                            null,
+                            item.url,
+                            false,
+                          );
                         }
-                        const dlObj = downloadsList[dIdx];
-                        const titleWithIdx =
-                          downloadsList.length > 1
-                            ? `${itemTitle}_${dIdx + 1}`
-                            : itemTitle;
-                        await startNativeDownload(
-                          dlObj.url,
-                          dlObj.type,
-                          titleWithIdx,
-                          null,
-                          item.url,
-                          false,
-                        );
                       }
                     }
                   } else {
@@ -434,7 +461,7 @@ downloadBtn.addEventListener("click", async () => {
                       return;
                     }
                     const dlObj = downloadsList[0];
-                    await startNativeDownload(
+                    await downloadItem(
                       dlObj.url,
                       dlObj.type,
                       itemTitle,
@@ -458,7 +485,7 @@ downloadBtn.addEventListener("click", async () => {
                       downloadsList.length > 1
                         ? `${itemTitle}_${dIdx + 1}`
                         : itemTitle;
-                    await startNativeDownload(
+                    await downloadItem(
                       dlObj.url,
                       dlObj.type,
                       titleWithIdx,
@@ -471,7 +498,12 @@ downloadBtn.addEventListener("click", async () => {
               }
             }
 
-            if (batchDownloadCancelled) {
+            if (downloadFailed) {
+              if (statusEl) {
+                statusEl.className = "batch-item-status error";
+                statusEl.textContent = t("status-failed");
+              }
+            } else if (batchDownloadCancelled) {
               if (statusEl) {
                 statusEl.className = "batch-item-status cancelled";
                 statusEl.textContent = t("status-cancelled");

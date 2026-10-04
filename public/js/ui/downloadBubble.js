@@ -222,6 +222,7 @@ class DownloadBubbleManager {
     `;
 
     const cancelBtn = itemEl.querySelector(".dbd-item-cancel");
+    if (cancelBtn) cancelBtn.hidden = !dl.onCancel;
     cancelBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
       if (typeof dl.onCancel === "function") {
@@ -251,6 +252,14 @@ class DownloadBubbleManager {
     }
 
     this.updateOverallProgress();
+  }
+
+  disableCancel(id) {
+    const dl = this.activeDownloads.get(id);
+    if (!dl) return;
+    dl.onCancel = null;
+    const button = dl.element?.querySelector(".dbd-item-cancel");
+    if (button) button.hidden = true;
   }
 
   completeDownload(id, message = null) {

@@ -1,5 +1,6 @@
 // history.js — history CRUD, callbacks, auto-clear
 import { translations } from "../i18n/index.js";
+import { validateDriveResult, mergeDriveFiles, getDriveStatus, acknowledgeDriveReceipt } from "./drive.js";
 import {
   getVideoThumbnail,
   Filesystem,
@@ -121,6 +122,7 @@ export function safeSetHistory(history) {
               favorite: true,
               timestamp: h.timestamp || Date.now(),
               favTimestamp: h.favTimestamp || Date.now(),
+              driveFiles: h.driveFiles || [],
               localFiles: (h.localFiles || []).map((f) => ({
                 path: f.path,
                 uri: f.uri,
@@ -274,6 +276,56 @@ export function toggleFavorite(url) {
   return isNowFav;
 }
 window.toggleMoriFavorite = toggleFavorite;
+
+const acknowledgingDriveReceipts = new Set();
+
+export function syncDriveHistory(receipts) {
+  if (localStorage.getItem("mori_incognito") === "true") return;
+  if (!Array.isArray(receipts) || !receipts.length) return;
+  try {
+    const history = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    const saved = [];
+    for (const receipt of receipts) {
+      let file;
+      try { file = { ...validateDriveResult(receipt), title: receipt.title }; }
+      catch (_) { continue; }
+      const url = receipt.sourceUrl || receipt.url || file.uri;
+      if (typeof url !== "string" || !url) continue;
+      let item = history.find((h) => cleanUrl(h.url) === cleanUrl(url) || cleanUrl(h.sourceUrl || "") === cleanUrl(url));
+      if (!item) {
+        item = { url, sourceUrl: url, title: file.title || file.fileName, timestamp: Date.now(), downloads: [] };
+        history.unshift(item);
+      }
+      item.driveFiles = mergeDriveFiles(item.driveFiles, [file]);
+      saved.push({ item, file });
+    }
+    if (!saved.length || !safeSetHistory(history)) return;
+    // Quota fallback may successfully write a reduced history without these files.
+    const persisted = JSON.parse(localStorage.getItem("mori_history") || "[]");
+    for (const { item, file } of saved) {
+      const storedItem = persisted.find((h) => h.url === item.url);
+      const stored = storedItem?.driveFiles?.some((f) => f.driveFileId === file.driveFileId && f.uri === file.uri && f.localDeleted === file.localDeleted && f.receiptId === file.receiptId);
+      if (!stored) continue;
+      // The share overlay uses a separate WebView storage origin on Android.
+      window.MoriShareBridge?.savePendingHistory?.(JSON.stringify(storedItem));
+      if (file.receiptId && !acknowledgingDriveReceipts.has(file.receiptId)) {
+        acknowledgingDriveReceipts.add(file.receiptId);
+        acknowledgeDriveReceipt(file.receiptId)
+          .catch((error) => console.warn("Drive receipt acknowledgement failed", error))
+          .finally(() => acknowledgingDriveReceipts.delete(file.receiptId));
+      }
+    }
+    renderHistory(onHistoryItemClick, onHistoryDeleteClick);
+    updateGreeting();
+  } catch (error) {
+    console.warn("Drive history recovery failed", error);
+  }
+}
+
+window.addEventListener("mori_drive_file_saved", (event) => syncDriveHistory([event.detail]));
+window.addEventListener("mori_drive_receipts", (event) => syncDriveHistory(event.detail));
+// Recover native completions even when their original WebView closed before saving history.
+getDriveStatus().catch(() => {});
 
 // Global Event for File Saved (Syncing UI and History)
 window.addEventListener("mori_file_saved", async (e) => {
@@ -438,6 +490,7 @@ export function saveToHistory(result, url) {
     downloads:
       result.downloads || (existingItem ? existingItem.downloads || [] : []),
     localFiles: existingItem ? existingItem.localFiles || [] : [],
+    driveFiles: mergeDriveFiles(existingItem?.driveFiles, result.driveFiles),
     localUri: existingItem ? existingItem.localUri : null,
     localThumbnail: existingItem ? existingItem.localThumbnail : null,
     favorite: existingItem ? existingItem.favorite || false : false,

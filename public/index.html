@@ -746,6 +746,7 @@
                     >
                       English
                     </div>
+                    <div class="dropdown-item" data-value="es">Espanol (Drive)</div>
                     <div
                       class="dropdown-item"
                       data-value="id"
@@ -2014,6 +2015,23 @@
               <h3 data-i18n="menu-storage-title">Storage & Download</h3>
             </div>
             <div class="settings-list">
+              <section id="driveSettings" class="settings-item drive-settings" aria-label="Google Drive">
+                <div class="item-label">Google Drive</div>
+                <p class="drive-description"></p>
+                <p class="drive-status" role="status" aria-live="polite"></p>
+                <div class="drive-actions">
+                  <button type="button" class="path-preset-chip" data-drive-action="configure">Import Windows credentials</button>
+                  <button type="button" class="path-preset-chip" data-drive-action="connect">Connect / choose folder</button>
+                  <button type="button" class="path-preset-chip" data-drive-action="status">Refresh status</button>
+                  <button type="button" class="path-preset-chip" data-drive-action="test">Test upload (.txt)</button>
+                  <button type="button" class="path-preset-chip" data-drive-action="disconnect">Disconnect</button>
+                </div>
+                <div class="drive-toggle-row">
+                  <span class="drive-toggle-label" id="driveToggleLabel">Save only in Drive</span>
+                  <div class="toggle-switch"><input type="checkbox" id="driveEnabledToggle" aria-labelledby="driveToggleLabel" disabled><label for="driveEnabledToggle"></label></div>
+                </div>
+                <div class="drive-pending" aria-live="polite"></div>
+              </section>
               <!-- All Files Access (Android) -->
               <div
                 class="settings-item action-item"

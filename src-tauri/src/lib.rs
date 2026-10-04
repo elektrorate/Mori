@@ -1,5 +1,27 @@
 use std::collections::HashMap;
 
+#[cfg(windows)]
+mod drive;
+
+#[tauri::command]
+async fn tauri_drive_action(
+    action: String,
+    options: Option<serde_json::Value>,
+    app: tauri::AppHandle,
+) -> Result<serde_json::Value, String> {
+    #[cfg(windows)]
+    {
+        tauri::async_runtime::spawn_blocking(move || drive::action(&action, options, &app))
+            .await
+            .map_err(|_| "The native Drive operation could not finish.".to_string())?
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = (action, options, app);
+        Err("Native Drive downloads are only available on Windows in this build.".to_string())
+    }
+}
+
 #[tauri::command]
 async fn tauri_http_request(
     url: String,
@@ -519,6 +541,7 @@ pub fn run() {
         tauri_get_folder_size,
         tauri_pick_folder,
         tauri_open_folder,
+        tauri_drive_action,
         tauri_get_engine_key
     ])
     .setup(|app| {

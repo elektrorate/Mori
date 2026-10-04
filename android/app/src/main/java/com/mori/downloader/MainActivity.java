@@ -306,8 +306,7 @@ public class MainActivity extends BridgeActivity {
         @JavascriptInterface
         public String getPendingHistoryList() {
             try {
-                SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                return prefs.getString("mori_pending_share_history_list", "[]");
+                return MoriDriveBackend.get(MainActivity.this).pendingHistory();
             } catch (Exception e) {
                 return "[]";
             }
@@ -316,9 +315,18 @@ public class MainActivity extends BridgeActivity {
         @JavascriptInterface
         public void clearPendingHistoryList() {
             try {
-                SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                prefs.edit().remove("mori_pending_share_history_list").commit();
+                MoriDriveBackend.get(MainActivity.this).clearPendingHistory();
             } catch (Exception ignored) {}
+        }
+
+        @JavascriptInterface
+        public boolean openUrl(String url) {
+            if (url == null || !url.matches("https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]+/view")) return false;
+            mainHandler.post(() -> {
+                try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); }
+                catch (Exception ignored) {}
+            });
+            return true;
         }
 
         @JavascriptInterface
@@ -728,8 +736,12 @@ public class MainActivity extends BridgeActivity {
 
         @JavascriptInterface
         public void requestAllFilesPermission() {
+            try {
+                if (MoriDriveBackend.get(MainActivity.this).isEnabled()) return;
+            } catch (Exception ignored) { return; }
             mainHandler.post(() -> {
                 try {
+                    if (MoriDriveBackend.get(MainActivity.this).isEnabled()) return;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                         try {
                             Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -807,6 +819,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(MoriDrivePlugin.class);
         super.onCreate(savedInstanceState);
 
         WebView webView = getBridge().getWebView();

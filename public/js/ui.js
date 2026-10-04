@@ -1,5 +1,6 @@
 // ui.js — history rendering + shared UI state + re-exports
 import { truncate, triggerHaptic } from "./utils/index.js";
+import { safeDriveUrl, openDriveFile, driveText } from "./modules/drive.js";
 import {
   currentLang,
   isEditingHistory,
@@ -204,6 +205,18 @@ export function renderHistory(onItemClick, onDeleteClick) {
     `;
 
     const favBtn = card.querySelector(".hist-fav-btn");
+    if (!isEditingHistory && item.driveFiles?.some(safeDriveUrl)) {
+      const driveButton = document.createElement("button");
+      driveButton.className = "path-preset-chip hist-drive-btn";
+      driveButton.textContent = driveText("Open in Drive", "Abrir en Drive");
+      driveButton.onclick = (event) => {
+        event.stopPropagation();
+        // Multi-file items expose every Drive file in the detail modal.
+        if (item.driveFiles.length > 1) onItemClick(item);
+        else openDriveFile(item.driveFiles[0]).catch((error) => window.dispatchEvent(new CustomEvent("mori_drive_warning", { detail: error.message })));
+      };
+      card.querySelector(".history-info").append(driveButton);
+    }
     if (favBtn) {
       favBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -221,7 +234,7 @@ export function renderHistory(onItemClick, onDeleteClick) {
       let startY = 0;
 
       const startPress = (e) => {
-        if (e.target.closest(".hist-fav-btn, .delete-item-btn")) return;
+        if (e.target.closest(".hist-fav-btn, .delete-item-btn, .hist-drive-btn")) return;
         isLongPress = false;
         try {
           window.getSelection()?.removeAllRanges();
@@ -273,7 +286,7 @@ export function renderHistory(onItemClick, onDeleteClick) {
       });
 
       card.addEventListener("click", (e) => {
-        if (e.target.closest(".hist-fav-btn, .delete-item-btn")) return;
+        if (e.target.closest(".hist-fav-btn, .delete-item-btn, .hist-drive-btn")) return;
         if (isLongPress) {
           e.preventDefault();
           e.stopPropagation();

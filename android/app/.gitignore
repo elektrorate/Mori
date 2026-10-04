@@ -1,2 +1,11 @@
 /build/*
 !/build/.npmkeep
+
+# The repository ignores test/ globally; retain only the native Drive tests.
+!/src/test/
+/src/test/**
+!/src/test/java/
+!/src/test/java/com/
+!/src/test/java/com/mori/
+!/src/test/java/com/mori/downloader/
+!/src/test/java/com/mori/downloader/MoriDriveValidationTest.java

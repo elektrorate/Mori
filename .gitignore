@@ -6,6 +6,9 @@ android/app/build
 android/.gradle
 bin/
 test/
+!/test/
+/test/*
+!/test/drive.test.mjs
 
 # Capacitor & Android Specs
 android/local.properties

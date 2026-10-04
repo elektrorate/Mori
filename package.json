@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node test/runner.js",
+    "test": "node --test test/drive.test.mjs android/drive-bridge.test.mjs",
     "start": "node server.js",
     "compile:scrapers": "node scripts/compile-scrapers.mjs",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "build:android": "npx cap sync android && cd android && ./gradlew assembleDebug",
+    "build:android:windows": "npx cap sync android && cd android && gradlew.bat assembleDebug --no-daemon",
     "build:android:release": "npx cap sync android && cd android && ./gradlew assembleRelease",
     "build:ios:ipa": "export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && npx cap sync ios && xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/Mori.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=\"\" && mkdir -p Payload && cp -r build/Mori.xcarchive/Products/Applications/App.app Payload/ && zip -r \"Mori v4.4.0.ipa\" Payload && rm -rf Payload build",
     "build:macos": "npm run tauri:build && rm -rf /tmp/dmg_build && mkdir -p /tmp/dmg_build && cp -r src-tauri/target/release/bundle/macos/Mori.app /tmp/dmg_build/ && cp src-tauri/README.txt /tmp/dmg_build/ && ln -s /Applications /tmp/dmg_build/Applications && hdiutil create -volname \"Mori\" -srcfolder /tmp/dmg_build -ov -format UDZO \"Mori-v4.4.0-macOS-arm64.dmg\" && rm -rf /tmp/dmg_build && tar -czf \"Mori-v4.4.0-macOS-arm64.app.tar.gz\" -C src-tauri/target/release/bundle/macos Mori.app"

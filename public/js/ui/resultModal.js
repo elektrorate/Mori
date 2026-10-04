@@ -10,6 +10,7 @@ import {
 } from "../utils/index.js";
 import { currentLang } from "../modules/core.js";
 import { renderMediaSlides } from "./result.js";
+import { safeDriveUrl, openDriveFile, driveText } from "../modules/drive.js";
 
 export function getCleanDirectoryPath(item, rawFile, itemType) {
   let p = rawFile || "";
@@ -129,6 +130,26 @@ export async function showModal(item, onRedownload) {
     const slidesWrapper = document.getElementById("modalSlidesWrapper");
     const sliderNav = document.getElementById("modalSliderNav");
     const redownloadBtn = document.getElementById("redownloadBtn");
+    document.getElementById("modalDriveFiles")?.remove();
+    const driveFiles = (item.driveFiles || []).filter(safeDriveUrl);
+    if (driveFiles.length && redownloadBtn) {
+      const files = document.createElement("div");
+      files.id = "modalDriveFiles";
+      files.className = "drive-actions";
+      for (const file of driveFiles) {
+        const button = document.createElement("button");
+        button.className = "path-preset-chip";
+        button.textContent = `${driveText("Open in Drive", "Abrir en Drive")}: ${file.title || file.fileName}`;
+        button.onclick = () => openDriveFile(file).catch((error) => showToast(error.message));
+        files.append(button);
+        if (!file.localDeleted) {
+          const warning = document.createElement("p");
+          warning.textContent = driveText("Local temporary file cleanup pending. Retry in Settings.", "Limpieza del archivo temporal pendiente. Reintenta en Ajustes.");
+          files.append(warning);
+        }
+      }
+      redownloadBtn.before(files);
+    }
 
     if (!modalOverlay || !slidesWrapper) {
       console.error("Modal elements not found!");

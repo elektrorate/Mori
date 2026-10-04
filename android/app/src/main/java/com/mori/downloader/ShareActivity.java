@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,6 +32,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -90,6 +94,10 @@ public class ShareActivity extends AppCompatActivity {
             .cookieJar(memoryCookieJar)
             .build();
 
+    private static final OkHttpClient resourceClient = new OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS)
+            .followRedirects(false).followSslRedirects(false).build();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,11 +145,12 @@ public class ShareActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setAllowFileAccess(false);
+        settings.setAllowContentAccess(false);
+        settings.setAllowFileAccessFromFileURLs(false);
+        settings.setAllowUniversalAccessFromFileURLs(false);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
         // Expose JavascriptInterface
@@ -153,19 +162,120 @@ public class ShareActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                injectConfig();
+                if (MoriSharePolicy.page(url) && MoriSharePolicy.page(view.getUrl())) injectConfig();
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+                if (!MoriSharePolicy.page(url)) {
+                    view.removeJavascriptInterface("MoriShareBridge");
+                    view.removeJavascriptInterface("MoriMainBridge");
+                    view.stopLoading();
+                }
+                super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return false;
+                String url = request.getUrl().toString();
+                if (request.isForMainFrame() && MoriSharePolicy.page(url)) return false;
+                if (request.isForMainFrame()) openExternal(url);
+                return true;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (MoriSharePolicy.page(url)) return false;
+                openExternal(url);
+                return true;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                return resource(request.getUrl().toString(), request.isForMainFrame(), request.getMethod(), request.getRequestHeaders());
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                // No frame/request metadata: serve APK assets only, never an unknown network document.
+                return resource(url, false, "GET", java.util.Collections.emptyMap());
             }
         });
 
-        webView.loadUrl("file:///android_asset/public/share.html");
+        webView.loadUrl(MoriSharePolicy.PAGE);
+    }
+
+    private void openExternal(String url) {
+        if (!MoriSharePolicy.external(url)) return;
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE));
+        } catch (Exception ignored) {}
+    }
+
+    private WebResourceResponse blockedResource() {
+        return new WebResourceResponse("text/plain", "UTF-8", 403, "Blocked",
+            java.util.Collections.singletonMap("X-Content-Type-Options", "nosniff"),
+            new ByteArrayInputStream(new byte[0]));
+    }
+
+    private WebResourceResponse resource(String url, boolean mainFrame, String method, java.util.Map<String, String> headers) {
+        if (!"GET".equals(method) || mainFrame && !MoriSharePolicy.page(url)) return blockedResource();
+        String asset = MoriSharePolicy.asset(url);
+        if (asset != null) {
+            try {
+                String mime = asset.endsWith(".js") ? "application/javascript" : asset.endsWith(".css") ? "text/css"
+                    : asset.endsWith(".html") ? "text/html" : android.webkit.MimeTypeMap.getSingleton()
+                        .getMimeTypeFromExtension(asset.substring(asset.lastIndexOf('.') + 1));
+                if (mime == null) mime = "application/octet-stream";
+                java.util.Map<String, String> responseHeaders = new HashMap<>();
+                responseHeaders.put("Content-Security-Policy", MoriSharePolicy.CSP);
+                responseHeaders.put("X-Content-Type-Options", "nosniff");
+                responseHeaders.put("Cache-Control", "no-store");
+                return new WebResourceResponse(mime, "UTF-8", 200, "OK", responseHeaders, getAssets().open("public/" + asset));
+            } catch (Exception ignored) { return blockedResource(); }
+        }
+        if (mainFrame || !MoriSharePolicy.external(url) || !url.startsWith("https://")) return blockedResource();
+        try {
+            HttpUrl current = HttpUrl.parse(url);
+            for (int redirects = 0; redirects <= 5; redirects++) {
+                Request.Builder request = new Request.Builder().url(current).header("User-Agent", "Mozilla/5.0 (Linux; Android) Mori/Share");
+                for (java.util.Map.Entry<String, String> header : headers.entrySet()) {
+                    if ("Range".equalsIgnoreCase(header.getKey())) request.header("Range", header.getValue());
+                }
+                Response response = resourceClient.newCall(request.build()).execute();
+                if (response.isRedirect()) {
+                    String location = response.header("Location");
+                    HttpUrl next = location == null ? null : current.resolve(location);
+                    response.close();
+                    if (next == null || !next.isHttps() || !MoriSharePolicy.external(next.toString())) return blockedResource();
+                    current = next;
+                    continue;
+                }
+                String type = response.header("Content-Type");
+                if (!response.isSuccessful() || response.body() == null || !MoriSharePolicy.remoteType(current.toString(), type)) {
+                    response.close();
+                    return blockedResource();
+                }
+                java.util.Map<String, String> responseHeaders = new HashMap<>();
+                responseHeaders.put("X-Content-Type-Options", "nosniff");
+                responseHeaders.put("Content-Security-Policy", "default-src 'none'; sandbox");
+                responseHeaders.put("Access-Control-Allow-Origin", "https://localhost");
+                for (String name : new String[]{"Content-Range", "Accept-Ranges", "Content-Length"}) {
+                    if (response.header(name) != null) responseHeaders.put(name, response.header(name));
+                }
+                InputStream stream = new FilterInputStream(response.body().byteStream()) {
+                    @Override public void close() throws IOException {
+                        try { super.close(); } finally { response.close(); }
+                    }
+                };
+                return new WebResourceResponse(type.split(";", 2)[0], null, response.code(), "OK", responseHeaders, stream);
+            }
+        } catch (Exception ignored) {}
+        return blockedResource();
     }
 
     private void injectConfig() {
+        if (webView == null || !MoriSharePolicy.page(webView.getUrl())) return;
         SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
         String lang = prefs.getString("mori_lang", "en");
         String theme = prefs.getString("mori_theme", "dark");
@@ -180,7 +290,22 @@ public class ShareActivity extends AppCompatActivity {
                 .replace("'", "\\'")
                 .replace("\n", " ")
                 .replace("\r", "");
-        String js = "window.__MORI_SHARE_URL = '" + escapedUrl + "';" +
+        // The share WebView has no Capacitor Bridge. Expose only the token-free native Drive request API.
+        String driveShim = "window.Capacitor=window.Capacitor||{};" +
+                "window.Capacitor.getPlatform=function(){return 'android';};" +
+                "window.Capacitor.Plugins=window.Capacitor.Plugins||{};" +
+                "window.__moriNativeCallbacks=window.__moriNativeCallbacks||window.__moriShareCallbacks||{};" +
+                "window.__moriShareCallbacks=window.__moriNativeCallbacks;" +
+                "window.Capacitor.Plugins.MoriDrive={request:function(args){return new Promise(function(resolve,reject){" +
+                "var id='drive_'+Date.now()+'_'+Math.random().toString(36).slice(2);" +
+                "window.__moriShareCallbacks=window.__moriShareCallbacks||{};" +
+                "window.__moriShareCallbacks[id]=function(raw){try{var value=JSON.parse(raw);" +
+                "if(!value.uploaded&&(value.ok===false||value.error))reject(new Error(value.error||'Drive failed'));" +
+                "else resolve(value);}catch(e){reject(new Error('Invalid native Drive response'));}};" +
+                "try{window.MoriShareBridge.driveRequest(JSON.stringify(args),id);}catch(e){" +
+                "delete window.__moriShareCallbacks[id];reject(new Error('Native Drive unavailable'));}" +
+                "});}};";
+        String js = driveShim + "window.__MORI_SHARE_URL = '" + escapedUrl + "';" +
                 "try { " +
                 "  localStorage.setItem('mori_lang', '" + lang + "');" +
                 "  localStorage.setItem('mori_theme', '" + theme + "');" +
@@ -230,6 +355,47 @@ public class ShareActivity extends AppCompatActivity {
 
     public class MoriShareBridge {
         @JavascriptInterface
+        public void driveRequest(String requestJson, String callbackId) {
+            try {
+                JSONObject request = new JSONObject(requestJson);
+                JSONObject options = request.optJSONObject("options");
+                if (options == null) options = new JSONObject();
+                MoriDriveBackend backend = MoriDriveBackend.get(ShareActivity.this);
+                String action = request.getString("action");
+                if ("status".equals(action)) driveCallback(callbackId, backend.status());
+                else if ("acknowledge".equals(action)) driveCallback(callbackId, backend.acknowledge(options.getString("receiptId")));
+                else if ("download".equals(action) || "saveBytes".equals(action)) {
+                    String jobId = backend.createJob(options, "saveBytes".equals(action), true);
+                    backend.run(jobId, options.optString("data", null), result -> driveCallback(callbackId, result));
+                } else if ("retry".equals(action)) {
+                    backend.run(options.getString("jobId"), null, result -> driveCallback(callbackId, result));
+                } else if ("setEnabled".equals(action) && options.opt("enabled") instanceof Boolean) {
+                    backend.setEnabled(options.getBoolean("enabled"));
+                    driveCallback(callbackId, backend.status());
+                } else if ("disconnect".equals(action)) {
+                    backend.disconnect();
+                    driveCallback(callbackId, backend.status());
+                } else {
+                    driveCallback(callbackId, new JSONObject().put("ok", false).put("error", "Use Drive settings in the main app"));
+                }
+            } catch (Exception e) {
+                try { driveCallback(callbackId, new JSONObject().put("ok", false).put("error", MoriDriveBackend.safeError(e))); }
+                catch (Exception ignored) {}
+            }
+        }
+
+        private void driveCallback(String id, JSONObject result) {
+            final String json = result.toString();
+            mainHandler.post(() -> {
+                if (webView == null || isDestroyed() || !MoriSharePolicy.page(webView.getUrl())) return;
+                String key = JSONObject.quote(id);
+                webView.evaluateJavascript("if(window.__moriShareCallbacks&&window.__moriShareCallbacks[" + key + "]){" +
+                    "var cb=window.__moriShareCallbacks[" + key + "];delete window.__moriShareCallbacks[" + key + "];" +
+                    "cb(" + JSONObject.quote(json) + ");}", null);
+            });
+        }
+
+        @JavascriptInterface
         public String getEngineSecurityKey(String challenge) {
             try {
                 return MainActivity.getEngineSecurityKeyNative(ShareActivity.this, challenge);
@@ -264,6 +430,7 @@ public class ShareActivity extends AppCompatActivity {
             executor.execute(() -> {
                 String result = httpRequest(optionsJson);
                 mainHandler.post(() -> {
+                    if (webView == null || isDestroyed() || !MoriSharePolicy.page(webView.getUrl())) return;
                     String js = "if (window.__moriShareCallbacks && window.__moriShareCallbacks['" + reqId + "']) { " +
                                 "  window.__moriShareCallbacks['" + reqId + "'](" + JSONObject.quote(result) + "); " +
                                 "  delete window.__moriShareCallbacks['" + reqId + "']; " +
@@ -368,6 +535,38 @@ public class ShareActivity extends AppCompatActivity {
          */
         @JavascriptInterface
         public void downloadFile(String url, String filename, String folder, String headersJson, String title) {
+            // Capture native destination now, before queueing. Never fall through to local storage on a Drive error.
+            try {
+                MoriDriveBackend backend = MoriDriveBackend.get(ShareActivity.this);
+                if (backend.isEnabled()) {
+                    JSONObject options = new JSONObject().put("url", url).put("fileName", filename)
+                        .put("sourceUrl", sharedUrl).put("title", title == null ? filename : title)
+                        .put("headers", headersJson == null || headersJson.isEmpty() ? new JSONObject() : new JSONObject(headersJson));
+                    String jobId = backend.createJob(options, false, true);
+                    backend.run(jobId, null, result -> mainHandler.post(() -> {
+                        if (webView == null || isDestroyed() || !MoriSharePolicy.page(webView.getUrl())) return;
+                        if (result.optBoolean("uploaded")) {
+                            webView.evaluateJavascript("window.onDownloadComplete&&window.onDownloadComplete(" +
+                                JSONObject.quote(filename) + ",''," + result.toString() + ");", null);
+                        } else {
+                            String error = result.optString("error", "DRIVE_OPERATION_FAILED");
+                            showDownloadFailedNotification(title, error);
+                            webView.evaluateJavascript("window.onDownloadFailed&&window.onDownloadFailed(" +
+                                JSONObject.quote(filename) + "," + JSONObject.quote(error) + ");", null);
+                        }
+                    }));
+                    return;
+                }
+            } catch (Exception e) {
+                final String error = MoriDriveBackend.safeError(e);
+                mainHandler.post(() -> {
+                    showDownloadFailedNotification(title, error);
+                    if (webView != null && !isDestroyed()) webView.evaluateJavascript(
+                        "window.onDownloadFailed&&window.onDownloadFailed(" + JSONObject.quote(filename) + "," +
+                        JSONObject.quote(error) + ");", null);
+                });
+                return;
+            }
             executor.execute(() -> {
                 // Start Foreground Service for background protection
                 try {
@@ -644,10 +843,17 @@ public class ShareActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     list = new org.json.JSONArray();
                 }
+                boolean cloud = MoriDriveBackend.get(ShareActivity.this).isEnabled();
                 try {
                     JSONObject obj = new JSONObject(itemJson);
+                    if (cloud) {
+                        obj.remove("localUri");
+                        obj.remove("localFiles");
+                        obj.remove("localThumbnail");
+                    }
                     list.put(obj);
                 } catch (Exception e) {
+                    if (cloud) return;
                     list.put(itemJson);
                 }
                 prefs.edit().putString("mori_pending_share_history_list", list.toString()).commit();
@@ -659,8 +865,7 @@ public class ShareActivity extends AppCompatActivity {
         @JavascriptInterface
         public String getPendingHistoryList() {
             try {
-                SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                return prefs.getString("mori_pending_share_history_list", "[]");
+                return MoriDriveBackend.get(ShareActivity.this).pendingHistory();
             } catch (Exception e) {
                 return "[]";
             }
@@ -669,8 +874,7 @@ public class ShareActivity extends AppCompatActivity {
         @JavascriptInterface
         public void clearPendingHistoryList() {
             try {
-                SharedPreferences prefs = getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-                prefs.edit().remove("mori_pending_share_history_list").commit();
+                MoriDriveBackend.get(ShareActivity.this).clearPendingHistory();
             } catch (Exception ignored) {}
         }
 

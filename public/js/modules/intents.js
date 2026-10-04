@@ -1,6 +1,7 @@
 // intents.js — clipboard paste, share intent, app url open, app state
 import { translations } from "../i18n/index.js";
 import { cleanUrl } from "../utils/urlUtils.js";
+import { mergeDriveFiles } from "./drive.js";
 import {
   Clipboard,
   App,
@@ -274,6 +275,9 @@ export function mergePendingHistorySync() {
       );
       if (existingIdx !== -1) {
         const existing = history[existingIdx];
+        newItem.driveFiles = mergeDriveFiles(existing.driveFiles, newItem.driveFiles);
+        newItem.favorite = existing.favorite || newItem.favorite || false;
+        newItem.favTimestamp = existing.favTimestamp || newItem.favTimestamp || 0;
         if (
           (!newItem.localFiles || newItem.localFiles.length === 0) &&
           existing.localFiles

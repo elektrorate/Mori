@@ -20,6 +20,7 @@ import { needsAsyncResolving, resolveDownloadUrl } from "../downloader/resolver.
 import { saveToStorage } from "../downloader/storage.js";
 import { handlePostDownload } from "../downloader/postProcess.js";
 import { downloadBubble } from "./downloadBubble.js";
+import { shouldUseDrive, downloadToDrive, driveText } from "../modules/drive.js";
 
 export function cancelCurrentDownload() {
   window._moriDownloadCancelled = true;
@@ -58,10 +59,19 @@ export async function startNativeDownload(
     return { success: false, error: "Wifi only guard" };
   }
 
+  let useDrive;
+  try {
+    useDrive = await shouldUseDrive();
+  } catch (error) {
+    showToast(error.message);
+    return { success: false, error: error.message };
+  }
+
   if (
-    url.startsWith("file://") ||
-    url.includes("_capacitor_file_") ||
-    url.startsWith("content://")
+    !useDrive &&
+    (url.startsWith("file://") ||
+      url.includes("_capacitor_file_") ||
+      url.startsWith("content://"))
   ) {
     showToast(t("toast-already-local"));
     return { success: true, skipped: true };
@@ -72,7 +82,7 @@ export async function startNativeDownload(
     window.__TAURI_INTERNALS__?.invoke ||
     window.__TAURI__?.invoke;
 
-  if (!Filesystem && !tauriInvoke) {
+  if (!useDrive && !Filesystem && !tauriInvoke) {
     try {
       const a = document.createElement("a");
       a.href = url;
@@ -104,7 +114,7 @@ export async function startNativeDownload(
   const progressContainer = document.getElementById("progressContainer");
   const originalContent = btn ? btn.innerHTML : "";
 
-  if (window.Capacitor?.getPlatform?.() === "android") {
+  if (!useDrive && window.Capacitor?.getPlatform?.() === "android") {
     try {
       const status = await Filesystem.checkPermissions();
       if (status.publicStorage !== "granted") {
@@ -169,7 +179,7 @@ export async function startNativeDownload(
     title: effectiveTitle,
     platform: platformLabel,
     type: type,
-    onCancel: () => {
+    onCancel: useDrive ? null : () => {
       itemCancelled = true;
     },
   });
@@ -192,14 +202,15 @@ export async function startNativeDownload(
   try {
     if (btn) btn.disabled = true;
     if (progressContainer) progressContainer.classList.remove("hidden");
-    updateProgress(0, "Downloading...");
+    const progressText = useDrive ? driveText("Downloading and uploading to Drive...", "Descargando y subiendo a Drive...") : "Downloading...";
+    updateProgress(0, progressText);
 
     // Acquire Wake Lock & Start Native Foreground Service
     requestWakeLock();
     if (window.MoriMainBridge?.startDownloadService) {
       try {
         window.MoriMainBridge.startDownloadService(
-          `Downloading ${platformLabel} ${type || ""}`,
+          useDrive ? progressText : `Downloading ${platformLabel} ${type || ""}`,
         );
       } catch (e) {
         console.warn("Foreground service start error", e);
@@ -229,7 +240,7 @@ export async function startNativeDownload(
         simProgress += 0.6 + Math.random() * 0.9;
       }
       const currentPct = Math.min(95, Math.round(simProgress));
-      updateProgress(currentPct, "Downloading...");
+      updateProgress(currentPct, progressText);
     }, 160);
 
     // Remove any existing listeners first to avoid double-firing
@@ -241,7 +252,7 @@ export async function startNativeDownload(
     }
 
     // Listen for real progress if Filesystem exists
-    if (Filesystem?.addListener) {
+    if (!useDrive && Filesystem?.addListener) {
       try {
         window._moriProgressListener = await Filesystem.addListener(
           "downloadProgress",
@@ -278,6 +289,46 @@ export async function startNativeDownload(
 
     const sanitizedTitle = sanitizeTitle(title, type);
     let fileName = generateFileName(sanitizedTitle, ext, sourceUrl, url);
+
+    const checkCancelled = () => Boolean(window._moriDownloadCancelled || itemCancelled);
+    if (checkCancelled()) {
+      downloadBubble.cancelDownload(dlId);
+      handleCancelCleanup(btn, originalContent, progressContainer);
+      return { success: false, error: "Cancelled" };
+    }
+    let actualDownloadUrl = url;
+    if (needsAsyncResolving(url)) {
+      const resolveRes = await resolveDownloadUrl({ url, btn, updateProgress, checkCancelled });
+      if (resolveRes.cancelled || checkCancelled()) {
+        downloadBubble.cancelDownload(dlId);
+        handleCancelCleanup(btn, originalContent, progressContainer);
+        return { success: false, error: "Cancelled" };
+      }
+      actualDownloadUrl = resolveRes.url;
+    }
+    actualDownloadUrl = cleanDownloadUrl(actualDownloadUrl);
+    const downloadHeaders = buildDownloadHeaders(actualDownloadUrl, sourceUrl, url);
+
+    if (useDrive) {
+      updateProgress(95, driveText("Uploading and verifying in Drive...", "Subiendo y verificando en Drive..."));
+      const result = await downloadToDrive({
+        url: actualDownloadUrl, fileName, headers: downloadHeaders,
+        sourceUrl: sourceUrl || url, title: effectiveTitle,
+      });
+      // Native has no cancel MVP. A confirmed cloud result must survive batch cancellation.
+      const savedText = driveText("Saved in Drive", "Guardado en Drive");
+      updateProgress(100, savedText);
+      downloadBubble.completeDownload(dlId, savedText);
+      if (btn) {
+        const badge = btn.querySelector(".dl-badge");
+        if (badge) badge.textContent = savedText;
+        else btn.textContent = savedText;
+        btn.disabled = false;
+      }
+      if (progressContainer) progressContainer.classList.add("hidden");
+      showToast(result.localDeleted ? savedText : driveText("Saved in Drive; local cleanup pending. See Settings.", "Guardado en Drive; limpieza local pendiente. Consulta Ajustes."));
+      return result;
+    }
 
     const isAudio = /mp3|audio|128k|48k|m4a|wav|flac/i.test(type);
     const rawVideoFolder = (localStorage.getItem("mori_download_path") || "").trim();
@@ -352,37 +403,11 @@ export async function startNativeDownload(
       fileName = uniqueRes.fileName;
     }
 
-    const checkCancelled = () =>
-      Boolean(window._moriDownloadCancelled || itemCancelled);
-
     if (checkCancelled()) {
       downloadBubble.cancelDownload(dlId);
       handleCancelCleanup(btn, originalContent, progressContainer);
       return { success: false, error: "Cancelled" };
     }
-
-    let actualDownloadUrl = url;
-    if (needsAsyncResolving(url)) {
-      const resolveRes = await resolveDownloadUrl({
-        url,
-        btn,
-        updateProgress,
-        checkCancelled,
-      });
-      if (resolveRes.cancelled || checkCancelled()) {
-        downloadBubble.cancelDownload(dlId);
-        handleCancelCleanup(btn, originalContent, progressContainer);
-        return { success: false, error: "Cancelled" };
-      }
-      actualDownloadUrl = resolveRes.url;
-    }
-
-    actualDownloadUrl = cleanDownloadUrl(actualDownloadUrl);
-    const downloadHeaders = buildDownloadHeaders(
-      actualDownloadUrl,
-      sourceUrl,
-      url,
-    );
 
     const { savedFile, successfulDir, cancelled } = await saveToStorage({
       actualDownloadUrl,
@@ -450,6 +475,7 @@ export async function startNativeDownload(
     }
 
     downloadBubble.failDownload(dlId, errorMsg);
+    if (useDrive) showToast(`${errorMsg}. ${driveText("Retry pending uploads in Settings.", "Reintenta las subidas pendientes en Ajustes.")}`);
 
     // Trigger System Tray Notification when download fails
     if (
