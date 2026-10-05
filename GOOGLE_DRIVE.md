@@ -117,3 +117,28 @@ Los instaladores descargados quedan en `artifacts/windows/` (excluido de Git):
 
 El APK de pruebas Android esta en
 `android/app/build/outputs/apk/debug/Mori v4.4.0.apk`.
+
+## Host-ia 4.4.1
+
+La marca visible ahora es Host-ia. El nombre del repositorio, los identificadores
+OAuth, las claves de preferencias, las carpetas heredadas y las referencias
+legales al proyecto original se conservan para mantener la compatibilidad.
+No hace falta crear nuevos clientes de Google para esta actualizacion.
+
+- Android: `android/app/build/outputs/apk/debug/Host-ia v4.4.1.apk`, versionCode 21,
+  mismo certificado de depuracion registrado en Google. Instalar como
+  actualizacion, sin desinstalar la version anterior ni borrar sus datos.
+- Windows EXE: `artifacts/host-ia/windows/nsis/Host-ia_4.4.1_x64-setup.exe`.
+- Windows MSI: `artifacts/host-ia/windows/msi/Host-ia_4.4.1_x64_en-US.msi`.
+- Se conserva el Upgrade Code MSI anterior. La actualizacion instalada y las
+  transferencias reales con la version nueva aun necesitan prueba en el equipo.
+
+La ejecucion [37276596331](https://github.com/elektrorate/Mori/actions/runs/37276596331)
+aprobo 42 pruebas JavaScript, 10 pruebas Rust y genero ambos instaladores.
+Android aprobo siete pruebas Java y la verificacion de firma. La interfaz web y
+los recursos de marca se comprobaron en escritorio y movil (320 y 390 px).
+
+El logo editable `assets/host-ia-logo.svg` es una recreacion vectorial de la imagen
+adjunta del usuario. `npm run icons:generate` regenera favicon, iconos nativos y
+pantallas de inicio. Antes de abrir Host-ia, cerrar todas las ventanas antiguas
+de Mori para evitar que dos instancias compitan por el bloqueo de Drive.
