@@ -239,7 +239,7 @@ input[type="text"]:focus {
 }
 
 .thumbnail-wrapper::before {
-  content: "MORI";
+  content: "Host-ia";
   position: absolute;
   font-weight: 800;
   letter-spacing: 10px;

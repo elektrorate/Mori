@@ -146,9 +146,9 @@ export async function testDriveUpload() {
   if (!(await shouldUseDrive())) throw new Error(driveText("Enable Drive before running the upload test.", "Activa Drive antes de probar la subida."));
   const timestamp = new Date().toISOString();
   return transfer("saveBytes", {
-    data: btoa(`Mori Google Drive upload test.\nUTC: ${timestamp}\n`),
-    fileName: `Mori_drive_test_${timestamp.replace(/[:.]/g, "-")}.txt`,
-    title: "Mori Drive upload test",
+    data: btoa(`Host-ia Google Drive upload test.\nUTC: ${timestamp}\n`),
+    fileName: `Host-ia_drive_test_${timestamp.replace(/[:.]/g, "-")}.txt`,
+    title: "Host-ia Drive upload test",
   });
 }
 

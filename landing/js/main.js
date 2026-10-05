@@ -797,10 +797,10 @@
     const num = tag.replace(/^v/, "");
 
     const defaultLabels = {
-      android: `Mori v${num}.apk`,
-      macos: `Mori-v${num}-macOS-arm64.dmg`,
-      windows: `Mori-v${num}-Windows-x64-Setup.exe`,
-      ios: `Mori v${num}.ipa (AltStore / TrollStore)`,
+      android: `Host-ia v${num}.apk`,
+      macos: `Host-ia-v${num}-macOS-arm64.dmg`,
+      windows: `Host-ia-v${num}-Windows-x64-Setup.exe`,
+      ios: `Host-ia v${num}.ipa (AltStore / TrollStore)`,
     };
 
     document.querySelectorAll("[data-dl-file]").forEach((el) => {
@@ -815,7 +815,7 @@
       if (assets && assets[platform]) {
         card.href = assets[platform];
       } else {
-        card.href = `https://github.com/coflyn/Mori/releases/tag/${tag}`;
+        card.href = `https://github.com/elektrorate/Mori/releases/tag/${tag}`;
       }
     });
 
@@ -848,7 +848,7 @@
       const targetUrl =
         assets && assets[os]
           ? assets[os]
-          : `https://github.com/coflyn/Mori/releases/tag/${tag}`;
+          : `https://github.com/elektrorate/Mori/releases/tag/${tag}`;
 
       if (heroBtn) {
         heroBtn.textContent = osMeta[os].heroText;
@@ -869,7 +869,7 @@
         floatingBtn.href = "#download";
       }
       if (floatingText) {
-        floatingText.textContent = "Download Mori";
+        floatingText.textContent = "Download Host-ia";
       }
     }
 
@@ -890,30 +890,27 @@
     }
   }
 
-  function syncDownloadRelease(latestVersion) {
-    if (latestVersion) {
-      applyDownloadMeta(latestVersion);
-    }
-
+  function syncDownloadRelease() {
     try {
       const cached = sessionStorage.getItem(GITHUB_RELEASE_KEY);
       const cachedTime = sessionStorage.getItem(GITHUB_RELEASE_TIME);
       if (cached && cachedTime && Date.now() - Number(cachedTime) < ONE_HOUR) {
         const parsed = JSON.parse(cached);
-        if (parsed && parsed.version) {
+        // Old cached upstream binaries must never be offered as Host-ia builds.
+        if (parsed?.repo === "elektrorate/Mori" && parsed.version) {
           applyDownloadMeta(parsed.version, parsed.assets);
           return;
         }
       }
     } catch (_) {}
 
-    fetch("https://api.github.com/repos/coflyn/Mori/releases/latest")
+    fetch("https://api.github.com/repos/elektrorate/Mori/releases/latest")
       .then((res) => {
         if (!res.ok) throw new Error("Status " + res.status);
         return res.json();
       })
       .then((data) => {
-        const version = data.tag_name || latestVersion;
+        const version = data.tag_name;
         const assets = {};
 
         if (Array.isArray(data.assets)) {
@@ -938,18 +935,15 @@
         try {
           sessionStorage.setItem(
             GITHUB_RELEASE_KEY,
-            JSON.stringify({ version, assets }),
+            JSON.stringify({ repo: "elektrorate/Mori", version, assets }),
           );
           sessionStorage.setItem(GITHUB_RELEASE_TIME, String(Date.now()));
         } catch (_) {}
 
         applyDownloadMeta(version, assets);
       })
-      .catch(() => {
-        if (latestVersion) {
-          applyDownloadMeta(latestVersion);
-        }
-      });
+      // A fork without published releases keeps the static availability notice.
+      .catch(() => {});
   }
 
   // Initial check for cached download meta
@@ -962,7 +956,7 @@
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length) {
         render(parsed);
-        syncDownloadRelease(parsed[0].version);
+        syncDownloadRelease();
         return;
       }
     }
@@ -981,7 +975,7 @@
           sessionStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
         } catch (_) {}
         render(releases);
-        syncDownloadRelease(releases[0].version);
+        syncDownloadRelease();
       }
     })
     .catch(() => {

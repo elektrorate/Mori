@@ -1,4 +1,4 @@
-name: Build Windows Drive
+name: Build Host-ia Windows Drive
 
 on:
   workflow_dispatch:
@@ -57,7 +57,7 @@ jobs:
       - name: Upload installers
         uses: actions/upload-artifact@v4
         with:
-          name: Mori-Drive-Windows-x64
+          name: Host-ia-Drive-Windows-x64
           if-no-files-found: error
           retention-days: 14
           path: |

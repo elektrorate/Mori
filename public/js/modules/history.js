@@ -29,7 +29,7 @@ export function safeSetHistory(history) {
     return true;
   } catch (quotaErr) {
     console.warn(
-      "[Mori History] LocalStorage quota exceeded, initiating progressive cleanup...",
+      "[Host-ia History] LocalStorage quota exceeded, initiating progressive cleanup...",
       quotaErr,
     );
 
@@ -67,7 +67,7 @@ export function safeSetHistory(history) {
       return true;
     } catch (e2) {
       console.warn(
-        "[Mori History] Tier 2 cleanup: stripping all data URLs and compacting...",
+        "[Host-ia History] Tier 2 cleanup: stripping all data URLs and compacting...",
         e2,
       );
       try {
@@ -109,7 +109,7 @@ export function safeSetHistory(history) {
         return true;
       } catch (e3) {
         console.error(
-          "[Mori History] Tier 3 cleanup: preserving favorites only...",
+          "[Host-ia History] Tier 3 cleanup: preserving favorites only...",
           e3,
         );
         try {
@@ -438,8 +438,8 @@ window.addEventListener("mori_file_saved", async (e) => {
               localThumbnail: localThumbnail,
               thumbnail: keepOriginalThumb,
               thumbVersion: 3,
-              versionCode: 20,
-              versionName: "4.4.0",
+              versionCode: 21,
+              versionName: "4.4.1",
               thumbRepaired: true,
             };
           }

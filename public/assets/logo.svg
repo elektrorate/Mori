@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
+  <title id="title">Host-ia</title>
+  <rect width="512" height="512" fill="#fff"/>
+  <g transform="translate(32 56) scale(2)" fill="none" stroke="#000" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M84 151C59 155 34 146 24 129C8 103 17 75 45 58C57 51 54 38 63 31C78 19 145 17 184 28C194 31 198 52 203 77C209 105 211 138 203 168C202 180 194 186 181 186C160 189 134 185 128 179C121 171 125 160 125 149"/>
+    <path d="M55 153L55 167C59 177 81 179 103 170L104 151"/>
+    <path d="M84 54L99 67"/>
+    <path d="M119 52C101 59 84 80 83 98C80 124 96 147 139 146"/>
+  </g>
+  <circle cx="348" cy="336" r="10" fill="#000"/>
+</svg>

@@ -74,8 +74,8 @@ test("manual upload test stages a small text file and reports the native cleanup
   const { drive, calls } = await setup(async (action, options) => action === "status" ? nativeStatus() : nativeResult({ fileName: options.fileName }));
   const result = await drive.testDriveUpload();
   const upload = calls.find((call) => call.action === "saveBytes");
-  assert.match(upload.options.fileName, /^Mori_drive_test_.*\.txt$/);
-  assert.match(atob(upload.options.data), /^Mori Google Drive upload test\.\nUTC: /);
+  assert.match(upload.options.fileName, /^Host-ia_drive_test_.*\.txt$/);
+  assert.match(atob(upload.options.data), /^Host-ia Google Drive upload test\.\nUTC: /);
   assert.equal(result.localDeleted, true);
   assert.equal(upload.options.sourceUrl, undefined);
 

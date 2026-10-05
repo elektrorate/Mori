@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mori · Save anything from anywhere</title>
+    <title>Host-ia · Save anything from anywhere</title>
     <meta
       name="description"
-      content="Mori is a free, private downloader for videos, photos, and music from 16 platforms. No ads, no accounts. Runs entirely on your device."
+      content="Host-ia is a free, private downloader for videos, photos, and music from 16 platforms. No ads, no accounts. Runs entirely on your device."
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#1a1814" />
-    <meta name="application-name" content="Mori" />
-    <meta name="apple-mobile-web-app-title" content="Mori" />
+    <meta name="application-name" content="Host-ia" />
+    <meta name="apple-mobile-web-app-title" content="Host-ia" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://getmori.vercel.app/" />
@@ -19,38 +19,38 @@
     <!-- Open Graph / Facebook / WhatsApp / Discord -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://getmori.vercel.app/" />
-    <meta property="og:site_name" content="Mori" />
+    <meta property="og:site_name" content="Host-ia" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="Mori · Save anything from anywhere" />
+    <meta property="og:title" content="Host-ia · Save anything from anywhere" />
     <meta
       property="og:description"
       content="Free media downloader for TikTok, Instagram, YouTube, Spotify, and 12 more. No watermarks. No accounts. No tracking."
     />
     <meta
       property="og:image"
-      content="https://getmori.vercel.app/assets/icon.png"
+      content="assets/icon.png"
     />
-    <meta property="og:image:alt" content="Mori · Media Downloader" />
+    <meta property="og:image:alt" content="Host-ia · Media Downloader" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Mori · Save anything from anywhere" />
+    <meta name="twitter:title" content="Host-ia · Save anything from anywhere" />
     <meta
       name="twitter:description"
       content="Free, private downloader for videos, photos, and music from 16 platforms. No ads, no accounts. Runs entirely on your device."
     />
     <meta
       name="twitter:image"
-      content="https://getmori.vercel.app/assets/icon.png"
+      content="assets/icon.png"
     />
-    <meta name="twitter:image:alt" content="Mori Logo" />
+    <meta name="twitter:image:alt" content="Host-ia Logo" />
 
     <!-- Favicons & Icons -->
-    <link rel="icon" href="assets/logo.png" type="image/png" />
-    <link
-      rel="apple-touch-icon"
-      href="https://getmori.vercel.app/assets/icon.png"
-    />
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="assets/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/favicon-16x16.png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" sizes="180x180" />
 
     <!-- Google Fonts & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -72,14 +72,14 @@
             "@type": "WebSite",
             "@id": "https://getmori.vercel.app/#website",
             "url": "https://getmori.vercel.app/",
-            "name": "Mori",
+            "name": "Host-ia",
             "description": "Free, private downloader for videos, photos, and music from 16 platforms.",
             "inLanguage": "en-US"
           },
           {
             "@type": "SoftwareApplication",
             "@id": "https://getmori.vercel.app/#software",
-            "name": "Mori",
+            "name": "Host-ia",
             "operatingSystem": "Android, iOS, Windows, macOS, Linux",
             "applicationCategory": "MultimediaApplication",
             "offers": {
@@ -87,15 +87,15 @@
               "price": "0",
               "priceCurrency": "USD"
             },
-            "downloadUrl": "https://github.com/coflyn/Mori/releases",
-            "softwareVersion": "4.4.0",
+            "downloadUrl": "https://github.com/elektrorate/Mori/releases",
+            "softwareVersion": "4.4.1",
             "license": "https://www.gnu.org/licenses/gpl-3.0.html",
             "author": {
               "@type": "Person",
               "name": "coflyn",
               "url": "https://github.com/coflyn"
             },
-            "description": "Mori is a free, private downloader for videos, photos, and music from 16 platforms. No ads, no accounts. Runs entirely on your device."
+            "description": "Host-ia is a free, private downloader for videos, photos, and music from 16 platforms. No ads, no accounts. Runs entirely on your device."
           },
           {
             "@type": "FAQPage",
@@ -103,10 +103,10 @@
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "Is Mori really free? What is the catch?",
+                "name": "Is Host-ia really free? What is the catch?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "There is no catch. Mori is free, open source (GPL-3.0), and runs entirely on your device. No ads, no analytics, no subscription."
+                  "text": "There is no catch. Host-ia is free, open source (GPL-3.0), and runs entirely on your device. No ads, no analytics, no subscription."
                 }
               },
               {
@@ -114,7 +114,7 @@
                 "name": "Does it keep working when a platform updates and breaks scrapers?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. Mori uses OTA (Over-The-Air) hot-patching to push scraper updates in the background without requiring you to reinstall the app. When a platform changes its API, the fix arrives silently."
+                  "text": "Yes. Host-ia uses OTA (Over-The-Air) hot-patching to push scraper updates in the background without requiring you to reinstall the app. When a platform changes its API, the fix arrives silently."
                 }
               },
               {
@@ -130,7 +130,7 @@
                 "name": "How do I install on iOS?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Mori for iOS ships as a .ipa file and requires sideloading via AltStore or TrollStore. It is not available on the App Store."
+                  "text": "Host-ia iOS builds use .ipa files and require sideloading via AltStore or TrollStore. Check the fork's Releases page for availability. It is not available on the App Store."
                 }
               },
               {
@@ -146,7 +146,7 @@
                 "name": "What if a platform or website owner wants their service removed?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "If you represent a platform or website and would like your service removed, modified, or have concerns regarding scraping, please open an issue on the Mori GitHub repository. Requests are reviewed and handled promptly."
+                  "text": "If you represent a platform or website and would like your service removed, modified, or have concerns regarding scraping, please open an issue on the upstream Mori GitHub repository. Requests are reviewed and handled promptly."
                 }
               }
             ]
@@ -169,9 +169,9 @@
     <canvas id="petals-canvas" aria-hidden="true"></canvas>
 
     <nav id="main-nav" role="navigation" aria-label="Main navigation">
-      <a href="#top" class="nav-logo" aria-label="Mori home">
-        <img src="assets/logo.png" alt="Mori logo" width="36" height="36" />
-        <span>Mori</span>
+      <a href="#top" class="nav-logo" aria-label="Host-ia home">
+        <img src="assets/logo.svg" alt="" width="36" height="36" />
+        <span>Host-ia</span>
       </a>
       <ul class="nav-links" role="list">
         <li><a href="#how-it-works">How it works</a></li>
@@ -186,7 +186,7 @@
           class="btn-gh-stars"
           target="_blank"
           rel="noopener"
-          aria-label="Mori on GitHub"
+          aria-label="Upstream project on GitHub"
         >
           <svg
             class="gh-icon"
@@ -208,7 +208,7 @@
           ></span>
         </a>
         <a
-          href="https://github.com/coflyn/Mori/releases"
+          href="https://github.com/elektrorate/Mori/releases"
           class="btn btn-primary nav-cta"
           target="_blank"
           rel="noopener"
@@ -274,7 +274,7 @@
           ></span>
         </a>
         <a
-          href="https://github.com/coflyn/Mori/releases"
+          href="https://github.com/elektrorate/Mori/releases"
           class="btn btn-primary"
           target="_blank"
           rel="noopener"
@@ -294,7 +294,7 @@
           </p>
           <div class="hero-actions">
             <a
-              href="https://github.com/coflyn/Mori/releases"
+              href="https://github.com/elektrorate/Mori/releases"
               class="btn btn-primary btn-large"
               id="hero-download-btn"
               target="_blank"
@@ -312,19 +312,20 @@
               >All formats &darr;</a
             >
           </p>
+          <p class="hero-platforms-hint">Preview: historical upstream interface before Host-ia branding.</p>
         </div>
         <div class="hero-visual" aria-hidden="true">
           <div class="phone-frame">
             <img
               src="assets/ss2.jpeg"
-              alt="Mori app home screen with 16 supported platforms"
+              alt="Historical upstream Mori app home screen with 16 supported platforms"
               class="phone-screen"
             />
           </div>
         </div>
       </section>
 
-      <!-- WHY MORI (COMPARISON) -->
+      <!-- WHY HOST-IA (COMPARISON) -->
       <section class="section-compare" aria-labelledby="compare-heading">
         <div class="container">
           <header class="section-header">
@@ -351,7 +352,7 @@
               </ul>
             </div>
             <div class="compare-card compare-card--good">
-              <span class="compare-badge compare-badge--good">Mori</span>
+              <span class="compare-badge compare-badge--good">Host-ia</span>
               <ul class="compare-list" role="list">
                 <li>100% ad-free, zero tracking, open source under GPL-3.0</li>
                 <li>Runs entirely on your device with native speed</li>
@@ -374,7 +375,7 @@
         <div class="container">
           <header class="section-header">
             <h2 id="how-heading">Three taps. Done.</h2>
-            <p>No setup, no accounts. Copy a link and Mori handles the rest.</p>
+            <p>No setup, no accounts. Copy a link and Host-ia handles the rest.</p>
           </header>
           <ol class="steps" role="list">
             <li class="step">
@@ -390,10 +391,10 @@
             <li class="step">
               <div class="step-num" aria-hidden="true">2</div>
               <div class="step-body">
-                <h3>Open Mori</h3>
+                <h3>Open Host-ia</h3>
                 <p>
-                  Mori detects the link from your clipboard the moment you open
-                  the app. On Android, tap Share in any app and pick Mori
+                  Host-ia detects the link from your clipboard the moment you open
+                  the app. On Android, tap Share in any app and pick Host-ia
                   directly without switching screens.
                 </p>
               </div>
@@ -598,7 +599,7 @@
         <div class="container">
           <header class="section-header">
             <h2 id="platforms-heading">16 platforms. One app.</h2>
-            <p>If you can open it, Mori can save it.</p>
+            <p>If you can open it, Host-ia can save it.</p>
           </header>
           <div class="platforms-grid" role="list">
             <div class="platform-item" role="listitem">
@@ -764,7 +765,7 @@
         <div class="container">
           <header class="section-header">
             <h2 id="screenshots-heading">Clean by design</h2>
-            <p>The app you open every day, not one you tolerate.</p>
+            <p>Historical upstream Mori screenshots show the interface before Host-ia branding.</p>
           </header>
 
           <div
@@ -813,7 +814,7 @@
                 >
                   <img
                     src="assets/ss2.jpeg"
-                    alt="Mori home screen with link input and 16 platform shortcuts"
+                    alt="Historical upstream Mori home screen with link input and 16 platform shortcuts"
                     loading="lazy"
                     draggable="false"
                   />
@@ -830,7 +831,7 @@
                 >
                   <img
                     src="assets/ss8.jpeg"
-                    alt="Mori media preview card with download action after analyze"
+                    alt="Historical upstream Mori media preview card with download action after analyze"
                     loading="lazy"
                     draggable="false"
                   />
@@ -847,7 +848,7 @@
                 >
                   <img
                     src="assets/ss9.jpeg"
-                    alt="Mori floating download bubble dropup with active task progress"
+                    alt="Historical upstream Mori floating download bubble dropup with active task progress"
                     loading="lazy"
                     draggable="false"
                   />
@@ -864,7 +865,7 @@
                 >
                   <img
                     src="assets/ss3.jpeg"
-                    alt="Mori multi-link batch downloader screen"
+                    alt="Historical upstream Mori multi-link batch downloader screen"
                     loading="lazy"
                     draggable="false"
                   />
@@ -881,7 +882,7 @@
                 >
                   <img
                     src="assets/ss4.jpeg"
-                    alt="Mori download history list and statistics"
+                    alt="Historical upstream Mori download history list and statistics"
                     loading="lazy"
                     draggable="false"
                   />
@@ -898,7 +899,7 @@
                 >
                   <img
                     src="assets/ss7.jpeg"
-                    alt="Mori offline downloaded media detail sheet with storage path"
+                    alt="Historical upstream Mori offline downloaded media detail sheet with storage path"
                     loading="lazy"
                     draggable="false"
                   />
@@ -915,7 +916,7 @@
                 >
                   <img
                     src="assets/ss1.jpeg"
-                    alt="Mori user guide onboarding dialog"
+                    alt="Historical upstream Mori user guide onboarding dialog"
                     loading="lazy"
                     draggable="false"
                   />
@@ -932,7 +933,7 @@
                 >
                   <img
                     src="assets/ss6.jpeg"
-                    alt="Mori live background configuration with shapes, brightness, and speed"
+                    alt="Historical upstream Mori live background configuration with shapes, brightness, and speed"
                     loading="lazy"
                     draggable="false"
                   />
@@ -949,7 +950,7 @@
                 >
                   <img
                     src="assets/ss5.jpeg"
-                    alt="Mori app configuration and settings root menu"
+                    alt="Historical upstream Mori app configuration and settings root menu"
                     loading="lazy"
                     draggable="false"
                   />
@@ -966,7 +967,7 @@
                 >
                   <img
                     src="assets/ss10.jpeg"
-                    alt="Mori general and privacy settings screen"
+                    alt="Historical upstream Mori general and privacy settings screen"
                     loading="lazy"
                     draggable="false"
                   />
@@ -983,7 +984,7 @@
                 >
                   <img
                     src="assets/ss11.jpeg"
-                    alt="Mori look and feel customization settings"
+                    alt="Historical upstream Mori look and feel customization settings"
                     loading="lazy"
                     draggable="false"
                   />
@@ -1000,7 +1001,7 @@
                 >
                   <img
                     src="assets/ss12.jpeg"
-                    alt="Mori storage paths and download queue settings"
+                    alt="Historical upstream Mori storage paths and download queue settings"
                     loading="lazy"
                     draggable="false"
                   />
@@ -1017,7 +1018,7 @@
                 >
                   <img
                     src="assets/ss13.jpeg"
-                    alt="Mori network, DNS over HTTPS, and connection settings"
+                    alt="Historical upstream Mori network, DNS over HTTPS, and connection settings"
                     loading="lazy"
                     draggable="false"
                   />
@@ -1034,7 +1035,7 @@
                 >
                   <img
                     src="assets/ss14.jpeg"
-                    alt="Mori advanced cache and history retention settings"
+                    alt="Historical upstream Mori advanced cache and history retention settings"
                     loading="lazy"
                     draggable="false"
                   />
@@ -1051,7 +1052,7 @@
                 >
                   <img
                     src="assets/ss15.jpeg"
-                    alt="Mori about and over-the-air scraper core version screen"
+                    alt="Historical upstream Mori about and over-the-air scraper core version screen"
                     loading="lazy"
                     draggable="false"
                   />
@@ -1113,17 +1114,19 @@
         aria-labelledby="download-heading"
       >
         <div class="container">
-          <h2 id="download-heading">Download Mori</h2>
+          <h2 id="download-heading">Download Host-ia</h2>
           <p class="download-sub">
-            Free and open source under GPL-3.0. No strings attached.
+            Free and open source under GPL-3.0. Check the fork's Releases page
+            for published builds; filenames below are expected formats, not a
+            guarantee that a release is available yet.
           </p>
           <div class="download-grid">
             <a
-              href="https://github.com/coflyn/Mori/releases"
+              href="https://github.com/elektrorate/Mori/releases"
               class="download-card"
               target="_blank"
               rel="noopener"
-              aria-label="Download Mori for Android"
+              aria-label="Check Host-ia releases for Android"
               data-dl-card="android"
             >
               <div class="dl-icon-box" aria-hidden="true">
@@ -1139,7 +1142,7 @@
                   <span class="dl-badge">APK</span>
                 </div>
                 <span class="dl-file" data-dl-file="android"
-                  >Mori v4.4.0.apk</span
+                  >Host-ia v4.4.1.apk</span
                 >
               </div>
               <div class="dl-arrow" aria-hidden="true">
@@ -1160,11 +1163,11 @@
             </a>
 
             <a
-              href="https://github.com/coflyn/Mori/releases"
+              href="https://github.com/elektrorate/Mori/releases"
               class="download-card"
               target="_blank"
               rel="noopener"
-              aria-label="Download Mori for macOS"
+              aria-label="Check Host-ia releases for macOS"
               data-dl-card="macos"
             >
               <div class="dl-icon-box" aria-hidden="true">
@@ -1180,7 +1183,7 @@
                   <span class="dl-badge">arm64 .dmg</span>
                 </div>
                 <span class="dl-file" data-dl-file="macos"
-                  >Mori-v4.4.0-macOS-arm64.dmg</span
+                  >Host-ia-v4.4.1-macOS-arm64.dmg</span
                 >
               </div>
               <div class="dl-arrow" aria-hidden="true">
@@ -1201,11 +1204,11 @@
             </a>
 
             <a
-              href="https://github.com/coflyn/Mori/releases"
+              href="https://github.com/elektrorate/Mori/releases"
               class="download-card"
               target="_blank"
               rel="noopener"
-              aria-label="Download Mori for Windows"
+              aria-label="Check Host-ia releases for Windows"
               data-dl-card="windows"
             >
               <div class="dl-icon-box" aria-hidden="true">
@@ -1221,7 +1224,7 @@
                   <span class="dl-badge">x64 Setup</span>
                 </div>
                 <span class="dl-file" data-dl-file="windows"
-                  >Mori-v4.4.0-Windows-x64-Setup.exe</span
+                  >Host-ia-v4.4.1-Windows-x64-Setup.exe</span
                 >
               </div>
               <div class="dl-arrow" aria-hidden="true">
@@ -1242,11 +1245,11 @@
             </a>
 
             <a
-              href="https://github.com/coflyn/Mori/releases"
+              href="https://github.com/elektrorate/Mori/releases"
               class="download-card"
               target="_blank"
               rel="noopener"
-              aria-label="Download Mori for iOS (sideload)"
+              aria-label="Check Host-ia releases for iOS (sideload)"
               data-dl-card="ios"
             >
               <div class="dl-icon-box" aria-hidden="true">
@@ -1262,7 +1265,7 @@
                   <span class="dl-badge">Sideload</span>
                 </div>
                 <span class="dl-file" data-dl-file="ios"
-                  >Mori v4.4.0.ipa (AltStore / TrollStore)</span
+                  >Host-ia v4.4.1.ipa (AltStore / TrollStore)</span
                 >
               </div>
               <div class="dl-arrow" aria-hidden="true">
@@ -1301,10 +1304,10 @@
       >
         <div class="container">
           <div class="section-header">
-            <h2 id="changelog-heading">Recent Updates</h2>
+            <h2 id="changelog-heading">Upstream Updates</h2>
             <p>
-              Continuous improvements and engine patches. Full history
-              documented.
+              Upstream scraper improvements and engine patches. This history
+              does not indicate that a Host-ia binary release is available.
             </p>
           </div>
 
@@ -1354,7 +1357,7 @@
                   aria-controls="faq-1"
                   id="faq-btn-1"
                 >
-                  Is Mori really free? What is the catch?<svg
+                  Is Host-ia really free? What is the catch?<svg
                     class="faq-chevron"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -1376,7 +1379,7 @@
               >
                 <div class="faq-answer-inner">
                   <p>
-                    There is no catch. Mori is free, open source (GPL-3.0), and
+                    There is no catch. Host-ia is free, open source (GPL-3.0), and
                     runs entirely on your device. No ads, no analytics, no
                     subscription. If you want to support development, there is a
                     <a
@@ -1420,7 +1423,7 @@
               >
                 <div class="faq-answer-inner">
                   <p>
-                    Yes. Mori uses OTA (Over-The-Air) hot-patching to push
+                    Yes. Host-ia uses OTA (Over-The-Air) hot-patching to push
                     scraper updates in the background without requiring you to
                     reinstall the app. When a platform changes its API, the fix
                     arrives silently.
@@ -1496,9 +1499,9 @@
               >
                 <div class="faq-answer-inner">
                   <p>
-                    Mori for iOS ships as a .ipa file and requires sideloading
+                    Host-ia iOS builds use .ipa files and require sideloading
                     via AltStore or TrollStore. It is not available on the App
-                    Store. The
+                    Store. Check the fork's Releases page for available builds. The
                     <a
                       href="https://github.com/coflyn/Mori/blob/main/GUIDE.md"
                       target="_blank"
@@ -1585,7 +1588,7 @@
                   <p>
                     If you represent a platform or website and would like your
                     service removed, modified, or have concerns regarding
-                    scraping, please open an issue on our
+                    scraping, please open an issue on the upstream project's
                     <a
                       href="https://github.com/coflyn/Mori/issues"
                       target="_blank"
@@ -1604,8 +1607,8 @@
         <div class="container container--narrow">
           <h2 id="support-heading">Keep it free</h2>
           <p>
-            Mori is built and maintained by one developer. If it saves you time,
-            a small tip helps keep the scrapers running.
+            Host-ia builds on the upstream project by coflyn. If it saves you
+            time, a small tip to the original developer helps keep the scrapers running.
           </p>
           <a
             href="https://sociabuzz.com/coflyn/tribe"
@@ -1621,9 +1624,9 @@
     <footer class="site-footer" role="contentinfo">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="#top" class="footer-logo" aria-label="Mori home">
-            <img src="assets/logo.png" alt="Mori" width="28" height="28" />
-            <span>Mori</span>
+          <a href="#top" class="footer-logo" aria-label="Host-ia home">
+            <img src="assets/logo.svg" alt="" width="28" height="28" />
+            <span>Host-ia</span>
           </a>
           <p class="footer-tagline">
             Save anything from anywhere &middot; Free &amp; private
@@ -1637,7 +1640,7 @@
             >GitHub</a
           >
           <a
-            href="https://github.com/coflyn/Mori/releases"
+            href="https://github.com/elektrorate/Mori/releases"
             target="_blank"
             rel="noopener"
             >Releases</a
@@ -1667,12 +1670,12 @@
     <!-- Floating Mobile Quick-Download Button -->
     <aside class="floating-dl" id="floating-dl" aria-hidden="true">
       <a
-        href="https://github.com/coflyn/Mori/releases"
+        href="https://github.com/elektrorate/Mori/releases"
         class="btn-floating-dl"
         id="floating-dl-btn"
         target="_blank"
         rel="noopener"
-        aria-label="Download Mori"
+        aria-label="Check Host-ia releases"
       >
         <svg
           class="floating-dl-icon"

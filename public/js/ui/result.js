@@ -1515,7 +1515,7 @@ export async function exportGalleryToPdf(title, items, sourceUrl) {
           savedTauri = true;
           showToast(
             translations[currentLang]["pdf-toast-saved"] ||
-              "PDF saved to Mori folder!",
+              "PDF saved to download folder!",
           );
           downloadBubble.completeDownload(
             pdfDlId,

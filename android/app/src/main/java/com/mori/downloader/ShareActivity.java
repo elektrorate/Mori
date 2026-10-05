@@ -238,7 +238,7 @@ public class ShareActivity extends AppCompatActivity {
         try {
             HttpUrl current = HttpUrl.parse(url);
             for (int redirects = 0; redirects <= 5; redirects++) {
-                Request.Builder request = new Request.Builder().url(current).header("User-Agent", "Mozilla/5.0 (Linux; Android) Mori/Share");
+                Request.Builder request = new Request.Builder().url(current).header("User-Agent", "Mozilla/5.0 (Linux; Android) Host-ia/Share");
                 for (java.util.Map.Entry<String, String> header : headers.entrySet()) {
                     if ("Range".equalsIgnoreCase(header.getKey())) request.header("Range", header.getValue());
                 }
@@ -322,8 +322,8 @@ public class ShareActivity extends AppCompatActivity {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel ch = new NotificationChannel(
-                    CHANNEL_ID, "Mori Downloads", NotificationManager.IMPORTANCE_DEFAULT);
-            ch.setDescription("Mori download notifications");
+                    CHANNEL_ID, "Host-ia Downloads", NotificationManager.IMPORTANCE_DEFAULT);
+            ch.setDescription("Host-ia download notifications");
             NotificationManager nm = getSystemService(NotificationManager.class);
             if (nm != null) nm.createNotificationChannel(ch);
         }
@@ -904,12 +904,12 @@ public class ShareActivity extends AppCompatActivity {
     }
     
     private String sanitize(String name) {
-        if (name == null) return "Mori_Media";
+        if (name == null) return "Host-ia_Media";
         String clean = name.replaceAll("[\\\\/:*?\"<>|]", "_").trim();
         // Remove leading dots to prevent creating Android hidden files (.filename)
         while (clean.startsWith(".")) {
             clean = clean.substring(1).trim();
         }
-        return clean.isEmpty() ? "Mori_Media" : clean;
+        return clean.isEmpty() ? "Host-ia_Media" : clean;
     }
 }

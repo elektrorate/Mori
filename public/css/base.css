@@ -86,6 +86,23 @@ header h1 {
   letter-spacing: 2px;
 }
 
+/* Keep the black artwork legible across every app theme. */
+.brand-logo {
+  display: block;
+  margin: 0 auto;
+  width: 96px;
+  height: 96px;
+  max-width: 100%;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.about-brand-logo {
+  margin-bottom: 16px;
+}
+
 header p {
   color: var(--text-secondary);
   font-size: 1rem;

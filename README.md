@@ -1,22 +1,28 @@
 <p align="center">
-  <img src="assets/icon.png" width="128" alt="Mori Logo">
+  <img src="assets/host-ia-logo.svg" width="128" alt="Host-ia Logo">
 </p>
 
-<h1 align="center">Mori</h1>
+<h1 align="center">Host-ia v4.4.1</h1>
 <p align="center"><em><strong>Save anything, From anywhere.</strong></em></p>
 
+**Host-ia is an independently branded derivative of [coflyn/Mori](https://github.com/coflyn/Mori), maintained in [elektrorate/Mori](https://github.com/elektrorate/Mori).** It is not the original Mori project and does not claim affiliation with its author. Original authorship, copyright, and GPL notices remain intact.
+
+The logo above is an [editable vector reconstruction](assets/host-ia-logo.svg) of the user-provided Host-ia logo, not the exact original attachment.
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v4.4.0-brown?style=flat-square" alt="Version">
-  <img src="https://img.shields.io/github/downloads/coflyn/Mori/total?style=flat-square&color=blue" alt="Downloads">
-  <img src="https://img.shields.io/github/stars/coflyn/Mori?style=flat-square&color=gold" alt="Stars">
-  <img src="https://img.shields.io/github/repo-size/coflyn/Mori?style=flat-square&color=purple" alt="Repo Size">
+  <img src="https://img.shields.io/badge/Version-v4.4.1-brown?style=flat-square" alt="Host-ia Version">
+  <img src="https://img.shields.io/github/downloads/coflyn/Mori/total?style=flat-square&color=blue" alt="Upstream Mori Downloads">
+  <img src="https://img.shields.io/github/stars/coflyn/Mori?style=flat-square&color=gold" alt="Upstream Mori Stars">
+  <img src="https://img.shields.io/github/repo-size/coflyn/Mori?style=flat-square&color=purple" alt="Upstream Mori Repo Size">
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Platform">
 </p>
 
 <div align="center">
 
-Save and download videos, photos, and music from 16 platforms. No watermarks. No accounts. No tracking. Everything stays on your device.
+Save and download videos, photos, and music from 16 platforms. Local downloads do not require a Google account. Optional Google Drive storage on Windows and Android requires Google authorization and is off by default. In Drive mode, local temporary files are deleted only after the upload is verified; failed uploads remain local for manual retry.
+
+The GitHub statistics above describe upstream Mori, not Host-ia. The donation link below supports the original author, coflyn.
 
 <a href="https://sociabuzz.com/coflyn/tribe" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" />
@@ -26,15 +32,17 @@ Save and download videos, photos, and music from 16 platforms. No watermarks. No
 
 ## 📸 Screenshots
 
+These are **historical upstream Mori examples**, retained for reference. They are not screenshots of Host-ia v4.4.1 and do not show the current branding or optional Drive interface.
+
 <p align="center">
-  <img src="assets/1.png" width="30%">
-  <img src="assets/2.png" width="30%">
-  <img src="assets/3.png" width="30%">
+  <img src="assets/1.png" width="30%" alt="Historical upstream Mori example 1">
+  <img src="assets/2.png" width="30%" alt="Historical upstream Mori example 2">
+  <img src="assets/3.png" width="30%" alt="Historical upstream Mori example 3">
 </p>
 <p align="center">
-  <img src="assets/4.png" width="30%">
-  <img src="assets/5.png" width="30%">
-  <img src="assets/6.png" width="30%">
+  <img src="assets/4.png" width="30%" alt="Historical upstream Mori example 4">
+  <img src="assets/5.png" width="30%" alt="Historical upstream Mori example 5">
+  <img src="assets/6.png" width="30%" alt="Historical upstream Mori example 6">
 </p>
 
 ---
@@ -55,22 +63,26 @@ Save and download videos, photos, and music from 16 platforms. No watermarks. No
 
 ## 🚀 How to Use
 
-Saving media with Mori takes only three simple steps:
+Saving media with Host-ia takes only three simple steps:
 
 1. **Copy Link**: Copy any video, photo, or music link from your favorite app (TikTok, Instagram, YouTube, Spotify, etc.).
-2. **Open Mori**: Mori automatically detects the link from your clipboard and analyzes it right away. _(On Android, you can also just tap **Share** on any post and choose **Mori** to download directly without leaving the app!)_
-3. **Download**: Pick your preferred quality (HD video without watermarks, audio MP3, or photo gallery) and tap **Download**. Your media is saved straight to your device's gallery or music folder.
+2. **Open Host-ia**: Host-ia automatically detects the link from your clipboard and analyzes it right away. _(On Android, you can also tap **Share** on a post and choose **Host-ia** to download without leaving the app!)_
+3. **Download**: Pick your preferred quality (HD video without watermarks, audio MP3, or photo gallery) and tap **Download**. By default, media is saved to your device. If you enable **Save only in Drive**, it is uploaded to your selected Google Drive folder and the local temporary file is deleted only after verification.
 
 ## 📥 Download & Installation
 
-Pre-compiled, ready-to-use packages are available for all devices on **[GitHub Releases](https://github.com/coflyn/Mori/releases)**.
+Host-ia binaries belong on the fork's **[GitHub Releases](https://github.com/elektrorate/Mori/releases)** page. Version 4.4.1 is the source/configuration target; this documentation does **not** confirm that its builds have completed or that packages are published. Use the actual assets of a completed Host-ia release, or follow [CONTRIBUTING.md](CONTRIBUTING.md) to build locally. [Upstream Mori releases](https://github.com/coflyn/Mori/releases) are original Mori binaries, not Host-ia updates.
 
-| Platform                                                                                                                        | Available Packages                                                | Installation Guide                                                                  |
+Expected release naming for v4.4.1 (not an availability guarantee):
+
+| Platform                                                                                                                        | Expected Packages                                                 | Installation Guide                                                                  |
 | :------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
-| <img src="https://cdn.simpleicons.org/android/3DDC84" width="16" /> **Android**                                                 | `Mori v...apk`                                                    | [Installation & Play Protect Guide](GUIDE.md#android-installation--troubleshooting) |
-| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **macOS**                                                     | `Mori-v...-macOS-arm64.dmg`<br>`Mori-v...-macOS-arm64.app.tar.gz` | [Gatekeeper Quarantine Fix](GUIDE.md#macos-installation--gatekeeper-fix)            |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows11/windows11-original.svg" width="16" /> **Windows** | `Mori-v...-Windows-x64-Setup.exe`<br>`Mori-v...-Windows-x64.msi`  | [Windows Setup Guide](GUIDE.md#windows-installation)                                |
-| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **iOS**                                                       | `Mori v...ipa`                                                    | [AltStore / TrollStore Sideloading](GUIDE.md#ios-sideloading-guide)                 |
+| <img src="https://cdn.simpleicons.org/android/3DDC84" width="16" /> **Android** | `Host-ia v4.4.1.apk` | [Installation & Play Protect Guide](GUIDE.md#-android-installation--troubleshooting) |
+| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **macOS** | `Host-ia-v4.4.1-macOS-arm64.dmg`<br>`Host-ia-v4.4.1-macOS-arm64.app.tar.gz` | [Gatekeeper Quarantine Fix](GUIDE.md#-macos-installation--gatekeeper-fix) |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows11/windows11-original.svg" width="16" /> **Windows** | `Host-ia-v4.4.1-Windows-x64-Setup.exe`<br>`Host-ia-v4.4.1-Windows-x64.msi` | [Windows Setup Guide](GUIDE.md#-windows-installation) |
+| <img src="https://cdn.simpleicons.org/apple/000000" width="16" /> **iOS** | `Host-ia-v4.4.1-iOS-Unsigned.ipa` (workflow)<br>`Host-ia v4.4.1.ipa` (local script) | [AltStore / TrollStore Sideloading](GUIDE.md#-ios-sideloading-guide) |
+
+Local Tauri builds use configuration-generated names such as `Host-ia_4.4.1_x64-setup.exe` and `Host-ia_4.4.1_x64_en-US.msi`; the desktop release workflow renames them as shown above. Existing application data and media folders still use legacy `Mori` names.
 
 > 📖 **Need help installing or troubleshooting?**  
 > Read the complete **[Installation, Sideloading & User Guide (GUIDE.md)](GUIDE.md)**.
@@ -78,23 +90,24 @@ Pre-compiled, ready-to-use packages are available for all devices on **[GitHub R
 ## 📜 Features
 
 - **16 Platforms in One App**: Save watermark-free videos, high-resolution photos, and audio from TikTok, Instagram, YouTube, Twitter/X, Spotify, Apple Music, Pinterest, Facebook, Threads, Bandcamp, Pixiv, Bilibili, Douyin, RedNote, Reddit, and TeraBox.
-- **Over-The-Air (OTA) Scraper Hot-Patching**: Never wait for app updates when a platform changes its API. Mori seamlessly hot-patches scraper engines in the background without needing to reinstall the app.
+- **Over-The-Air (OTA) Scraper Hot-Patching**: Host-ia retains the upstream `coflyn/Mori` scraper update service, separate from the fork's binary release channel.
 - **Custom Directory & Storage Freedom**: Pick any folder across your device storage (including SD cards, Movies, Downloads, and custom folders) with native folder pickers and full file management support.
 - **One-Tap Playlists & Albums**: Download full music albums or playlists from **Spotify**, **Apple Music**, and **YouTube** in one click instead of saving songs one by one.
 - **High-Speed Concurrent Downloads**: Download music albums, playlists, and multi-photo galleries in parallel with up to 5 concurrent worker threads for blazing fast speeds.
 - **Floating Download Bubble & Manager**: Non-intrusive monochrome floating bubble tracking active tasks in real-time with an aggregated progress ring, expandable dropup tray, individual task progress bars, and instant cancellation.
-- **Quick Save via Android Share Menu**: Spot a video you love? Tap **Share** in any app and select Mori to download it instantly in a neat overlay without switching apps.
-- **Multi-Link Batch Mode**: Paste several links at once and let Mori queue and download them all automatically in the background.
+- **Quick Save via Android Share Menu**: Spot a video you love? Tap **Share** in any app and select Host-ia to download it in an overlay without switching apps.
+- **Multi-Link Batch Mode**: Paste several links at once and let Host-ia queue and download them all automatically in the background.
 - **Built-in Custom Fullscreen Player & Preview**: Play videos, stream tracks, and browse photo carousels right inside the app with a sleek custom fullscreen player, real-time title bar, smooth seek scrubbing, double-tap seek, and mute controls.
 - **Instant Photo-to-PDF**: Combine photo galleries or multi-image posts into a single, clean PDF file for offline reading or sharing.
 - **PIN & Biometric Lock**: Protect your download history with an optional 4-digit PIN code or fingerprint / Face ID lock.
-- **Clean Folder Organization**: Files are neatly organized in standard system folders (`Movies/Mori`, `Music/Mori`, `Pictures/Mori`) for easy access in your gallery.
-- **Automatic Clipboard Detection**: Opening Mori automatically suggests your copied link for instant one-tap downloading.
+- **Clean Folder Organization**: Local files retain the existing runtime folder names (`Movies/Mori`, `Music/Mori`, `Pictures/Mori`, or `Download/Mori`, depending on platform/settings). These paths are not renamed with the visible branding.
+- **Automatic Clipboard Detection**: Opening Host-ia automatically suggests your copied link for instant one-tap downloading.
 - **Background Downloads**: Large videos and playlists keep downloading seamlessly even when you minimize the app or turn off the screen.
 - **Anti-Corrupt File Protection**: Files are saved securely—media only appears in your gallery once 100% complete, preventing broken or unplayable files.
 - **Modern Themes & Live Backgrounds**: Choose from elegant dark modes and interactive animated backgrounds (Stars, Waves, Fireflies).
 - **9 Languages**: English, Indonesian, Japanese, Korean, Simplified Chinese, Arabic (with RTL support), Russian, Tagalog, and Hindi.
-- **100% Private & Ad-Free**: No ads, no analytics, no accounts required, and zero external hosting. Everything runs on your device.
+- **Optional Google Drive Storage**: Off by default, available on Windows and Android with native Drive support. Uploads go to your chosen folder; local temporary files are removed only after native verification. Failed transfers and pending cleanup can be retried in Settings. See [the user guide](GUIDE.md#optional-google-drive-storage) and [native setup details](GOOGLE_DRIVE.md).
+- **Ad-Free & No Analytics**: The app runs on your device, but media requests use source platforms and third-party scraper providers. Optional Drive storage sends media to your authorized Google account; do not treat it as local-only storage.
 
 ## 🌐 Supported Platforms & Scraper Engines
 
@@ -122,7 +135,7 @@ Pre-compiled, ready-to-use packages are available for all devices on **[GitHub R
 Interested in customizing the interface, contributing translations, or compiling binaries locally?
 
 👉 **[Contributing & Build Guide (CONTRIBUTING.md)](CONTRIBUTING.md)** — Complete prerequisites, environment setup, and compilation instructions for Android, iOS, macOS, and Windows.  
-📜 **[Release History & Changelog (CHANGELOG.md)](CHANGELOG.md)** — Detailed version-by-version release logs.
+📜 **[Release History & Changelog (CHANGELOG.md)](CHANGELOG.md)** — Preserved historical Mori release logs; not proof of a completed Host-ia v4.4.1 build.
 
 <details>
 <summary><b>🔍 Click to view Tech Stack & Project Structure</b></summary>
@@ -238,27 +251,30 @@ Mori/
 
 ## 🔧 Scraper Architecture
 
-Mori's scraper core is bundled via esbuild into `public/js/scrapers/bundle.js` — a plain minified IIFE containing all 16 platform scrapers.
+Host-ia retains Mori's scraper core, bundled via esbuild into `public/js/scrapers/bundle.js`, a plain minified IIFE containing all 16 platform scrapers. The project directory remains `Mori/`, and technical names such as `com.mori.downloader`, `MoriDrive`, legacy preference keys, PIN derivation, native bridge/service names, and bundled binary names are unchanged.
 
-- **OTA Hot-Patching**: When a platform changes its API, Mori can silently download and apply an updated `bundle.js` from GitHub without requiring a full app update.
+- **OTA Hot-Patching**: Host-ia can download and apply an updated `bundle.js` from upstream `coflyn/Mori` without a full app update. Keep this service distinct from binary updates from `elektrorate/Mori`; installing an upstream Mori binary can replace the fork rather than update Host-ia.
 - **Open Client Architecture**: The entire frontend, UI design system, and core app logic remain **100% open source under GPL-3.0**.
 - **Collaborative Development**: Honest developers who want to improve scrapers or fix broken endpoints are always welcome to coordinate through [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## ⚖️ Disclaimer
 
-- **Personal & Educational Use Only**: Mori is an open-source educational utility designed solely for personal media archiving and research. Users are solely responsible for complying with local copyright laws and the terms of service of source platforms.
-- **Zero Media Hosting**: Mori does not host, stream, cache, or redistribute any media on external servers. All operations execute strictly on-demand directly on the user's local device.
-- **Respect for Third-Party Providers**: Mori acts purely as a client-side wrapper querying publicly available web endpoints. If you are an operator or developer of an upstream service and wish to have your endpoint excluded or removed from Mori, please reach out via GitHub Issues or email (riazrepo@gmail.com), and we will promptly accommodate your request.
+- **Personal & Educational Use**: Host-ia is an open-source utility for personal media archiving and research, derived from Mori. Users are responsible for complying with local copyright laws and the terms of service of source platforms.
+- **Storage & Network Use**: Host-ia does not operate a media-hosting service. It requests media through source platforms and third-party providers, saves locally by default, and uploads to the user's Google Drive only when that optional destination is enabled.
+- **Respect for Third-Party Providers**: Host-ia retains Mori's client-side scraper architecture. Report endpoint concerns for this derivative through [fork issues](https://github.com/elektrorate/Mori/issues). For the original Mori project, use [upstream issues](https://github.com/coflyn/Mori/issues) or the original author's published contact, riazrepo@gmail.com; that contact is not presented as Host-ia support.
 
 ## 📄 License & Terms of Use
 
-Mori is free and open-source software licensed under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**.
+Host-ia is a derivative of Mori and remains free and open-source software under the **[GNU General Public License v3.0 (GPL-3.0)](LICENSE)**. Rebranding does not transfer ownership of the original project or its copyrights. Retain original copyright, author, license, and source notices, including GPL comments, when modifying or distributing it.
 
-- **Copyleft Enforcement**: Anyone who modifies or distributes copies of this software is strictly required to provide the complete corresponding source code under the same GPL-3.0 license.
-- **No Unauthorized Commercial Re-selling**: Packaging, rebranding, or distributing closed-source, paid, or monetized variants of Mori without honoring GPL-3.0 requirements violates copyright law and will be subject to official DMCA takedowns.
+- **Copyleft Enforcement**: When distributing modified versions or binaries, honor GPL-3.0 requirements for providing complete corresponding source code under the same license. Private modifications do not by themselves require public source publication.
+- **Distribution Compliance**: Packaging or rebranding does not remove GPL obligations. Commercial distribution is allowed under the GPL when its requirements are honored; closed-source redistribution without the required corresponding source is not.
 - **Trademark & Identity**: The name "Mori", app logo, and associated visual designs are the property of the original author. Derivative works must be clearly distinguished and must not claim affiliation with the original project.
+- **Independent Branding**: Host-ia identifies this derivative only. It does not rename the original author's work, claim ownership of Mori, or imply the original author endorses this fork.
 
 ---
+
+Original Mori author credits (preserved):
 
 Developed with ❤️ by coflyn.  
 GitHub: https://github.com/coflyn  

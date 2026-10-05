@@ -2,10 +2,11 @@
 import { translations } from "../i18n/index.js";
 import { Filesystem } from "../utils/index.js";
 
-export const APP_VERSION = "4.4.0";
+export const APP_VERSION = "4.4.1";
 export const GITHUB_REPO = "coflyn/Mori";
-export const UPDATE_CHECK_URL = `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`;
-export const REPO_URL = `https://github.com/${GITHUB_REPO}`;
+// Binary releases belong to the fork; scraper OTA continues to use GITHUB_REPO.
+export const UPDATE_CHECK_URL = "https://api.github.com/repos/elektrorate/Mori/releases/latest";
+export const REPO_URL = "https://github.com/elektrorate/Mori";
 
 const tauriInvoke =
   window.__TAURI__?.core?.invoke ||

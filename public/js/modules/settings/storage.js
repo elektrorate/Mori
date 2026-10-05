@@ -337,13 +337,13 @@ export function initStorageSettings() {
            <span class="path-label-sm">${lang["label-custom-directory"] || "Target Directory"}</span>
            <div class="mori-input-with-icon">
              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-             <input type="text" id="customPathInput" class="mori-input-noborder" value="${customPath}" placeholder="e.g. Movies/Mori" spellcheck="false" autocomplete="off">
+             <input type="text" id="customPathInput" class="mori-input-noborder" value="${customPath}" placeholder="e.g. Movies/Host-ia" spellcheck="false" autocomplete="off">
            </div>
          </div>
          <span class="path-label-sm">${lang["label-path-presets"] || "Presets"}</span>
          <div class="path-presets-container">
            ${browseBtnHtml}
-           ${presets.map((p) => `<button type="button" class="path-preset-chip" data-path="${p}">${p}</button>`).join("")}
+           ${presets.map((p) => `<button type="button" class="path-preset-chip" data-path="${p}">${p.includes("Mori") ? "Host-ia: " : ""}${p}</button>`).join("")}
          </div>
          <button id="resetPathBtn" class="reset-path-btn">
            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
@@ -462,13 +462,13 @@ export function initStorageSettings() {
            <span class="path-label-sm">${lang["label-custom-directory"] || "Target Directory"}</span>
            <div class="mori-input-with-icon">
              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-             <input type="text" id="customMusicPathInput" class="mori-input-noborder" value="${customMusicPath}" placeholder="e.g. Music/Mori" spellcheck="false" autocomplete="off">
+             <input type="text" id="customMusicPathInput" class="mori-input-noborder" value="${customMusicPath}" placeholder="e.g. Music/Host-ia" spellcheck="false" autocomplete="off">
            </div>
          </div>
          <span class="path-label-sm">${lang["label-path-presets"] || "Presets"}</span>
          <div class="path-presets-container">
            ${browseBtnHtml}
-           ${presets.map((p) => `<button type="button" class="path-preset-chip" data-path="${p}">${p}</button>`).join("")}
+           ${presets.map((p) => `<button type="button" class="path-preset-chip" data-path="${p}">${p.includes("Mori") ? "Host-ia: " : ""}${p}</button>`).join("")}
          </div>
          <button id="resetMusicPathBtn" class="reset-path-btn">
            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>

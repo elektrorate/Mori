@@ -1,20 +1,21 @@
 {
-  "name": "mori",
-  "version": "4.4.0",
+  "name": "host-ia",
+  "version": "4.4.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test test/drive.test.mjs android/drive-bridge.test.mjs",
+    "test": "node --test test/drive.test.mjs test/branding.test.mjs android/drive-bridge.test.mjs",
     "start": "node server.js",
     "compile:scrapers": "node scripts/compile-scrapers.mjs",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
+    "icons:generate": "node tools/generate-brand-assets.mjs",
     "build:android": "npx cap sync android && cd android && ./gradlew assembleDebug",
     "build:android:windows": "npx cap sync android && cd android && gradlew.bat assembleDebug --no-daemon",
     "build:android:release": "npx cap sync android && cd android && ./gradlew assembleRelease",
-    "build:ios:ipa": "export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && npx cap sync ios && xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/Mori.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=\"\" && mkdir -p Payload && cp -r build/Mori.xcarchive/Products/Applications/App.app Payload/ && zip -r \"Mori v4.4.0.ipa\" Payload && rm -rf Payload build",
-    "build:macos": "npm run tauri:build && rm -rf /tmp/dmg_build && mkdir -p /tmp/dmg_build && cp -r src-tauri/target/release/bundle/macos/Mori.app /tmp/dmg_build/ && cp src-tauri/README.txt /tmp/dmg_build/ && ln -s /Applications /tmp/dmg_build/Applications && hdiutil create -volname \"Mori\" -srcfolder /tmp/dmg_build -ov -format UDZO \"Mori-v4.4.0-macOS-arm64.dmg\" && rm -rf /tmp/dmg_build && tar -czf \"Mori-v4.4.0-macOS-arm64.app.tar.gz\" -C src-tauri/target/release/bundle/macos Mori.app"
+    "build:ios:ipa": "export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && npx cap sync ios && xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -archivePath build/Host-ia.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=\"\" && mkdir -p Payload && cp -r build/Host-ia.xcarchive/Products/Applications/App.app Payload/ && zip -r \"Host-ia v4.4.1.ipa\" Payload && rm -rf Payload build",
+    "build:macos": "npm run tauri:build && rm -rf /tmp/dmg_build && mkdir -p /tmp/dmg_build && cp -r src-tauri/target/release/bundle/macos/Host-ia.app /tmp/dmg_build/ && cp src-tauri/README.txt /tmp/dmg_build/ && ln -s /Applications /tmp/dmg_build/Applications && hdiutil create -volname \"Host-ia\" -srcfolder /tmp/dmg_build -ov -format UDZO \"Host-ia-v4.4.1-macOS-arm64.dmg\" && rm -rf /tmp/dmg_build && tar -czf \"Host-ia-v4.4.1-macOS-arm64.app.tar.gz\" -C src-tauri/target/release/bundle/macos Host-ia.app"
   },
   "keywords": [],
   "author": "",
@@ -41,7 +42,8 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.11.4",
-    "esbuild": "^0.28.2"
+    "esbuild": "^0.28.2",
+    "sharp": "^0.35.5"
   },
   "overrides": {
     "tar": "7.5.21",

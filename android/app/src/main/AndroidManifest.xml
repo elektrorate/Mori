@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ShareActivity"
-            android:label="Mori Quick Save"
+            android:label="Host-ia Quick Save"
             android:theme="@style/ShareOverlayTheme"
             android:exported="true"
             android:launchMode="singleTop"

@@ -406,7 +406,7 @@ function renderDownloadList(result) {
       <div class="dl-badge" style="flex-shrink: 0;">${downloadBadgeText}</div>
     `;
 
-    btn.onclick = () => triggerDownload(dl, result.title || "Mori_Media", idx);
+    btn.onclick = () => triggerDownload(dl, result.title || "Host-ia_Media", idx);
     downloadList.appendChild(btn);
   });
 
@@ -838,7 +838,7 @@ function generateFilename(title, type, index) {
     .trim();
 
   const isTrackType = /^\d+\.\s+/.test(cleanTypeLabel);
-  let effectiveTitle = title || "Mori_Media";
+  let effectiveTitle = title || "Host-ia_Media";
   if (isTrackType) {
     effectiveTitle =
       cleanTypeLabel.replace(/^\d+\.\s+/, "").trim() || cleanTypeLabel;
@@ -859,7 +859,7 @@ function generateFilename(title, type, index) {
     .replace(/\s+/g, " ")
     .substring(0, 60);
 
-  if (!sanitized) sanitized = "Mori_Media";
+  if (!sanitized) sanitized = "Host-ia_Media";
 
   let ext = "mp4";
   const t = (type || "").toLowerCase();

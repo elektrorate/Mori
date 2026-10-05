@@ -370,7 +370,7 @@ public class MainActivity extends BridgeActivity {
                 if (nm == null) return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     android.app.NotificationChannel ch = new android.app.NotificationChannel(
-                            "mori_download_complete", "Mori Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                            "mori_download_complete", "Host-ia Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
                     nm.createNotificationChannel(ch);
                 }
                 androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "mori_download_complete")
@@ -392,7 +392,7 @@ public class MainActivity extends BridgeActivity {
                 if (nm == null) return;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     android.app.NotificationChannel ch = new android.app.NotificationChannel(
-                            "mori_download_complete", "Mori Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                            "mori_download_complete", "Host-ia Downloads", android.app.NotificationManager.IMPORTANCE_DEFAULT);
                     nm.createNotificationChannel(ch);
                 }
                 androidx.core.app.NotificationCompat.Builder b = new androidx.core.app.NotificationCompat.Builder(MainActivity.this, "mori_download_complete")

@@ -179,6 +179,9 @@ body {
   width: 36px;
   height: 36px;
   object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px;
 }
 .nav-links {
   display: flex;
@@ -1541,6 +1544,9 @@ h1 {
   width: 28px;
   height: 28px;
   object-fit: contain;
+  background: #fff;
+  border-radius: 5px;
+  padding: 2px;
 }
 .footer-tagline {
   font-size: 0.8rem;
@@ -1763,7 +1769,7 @@ h1 {
     border-color: rgba(26, 24, 20, 0.18);
   }
   .download-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
   }
   .steps {

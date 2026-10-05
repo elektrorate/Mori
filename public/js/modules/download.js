@@ -381,7 +381,7 @@ downloadBtn.addEventListener("click", async () => {
                         itemTitle
                           .replace(/[\\/:*?"<>|#%&{}\[\]@$^+=~`';,]/g, "")
                           .trim()
-                          .substring(0, 60) || "Mori_Batch_Album";
+                          .substring(0, 60) || "Host-ia_Batch_Album";
                       const pdfFileName = `${sanitizedTitle}.pdf`;
                       if (drivePdf || await shouldUseDrive()) {
                         drivePdf = true;

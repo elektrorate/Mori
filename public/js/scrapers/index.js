@@ -42,7 +42,7 @@ async function fetchBundleText() {
       if (text) return text;
     }
   }
-  throw new Error("[Mori] Could not load scrapers/bundle.js");
+  throw new Error("[Host-ia] Could not load scrapers/bundle.js");
 }
 
 async function loadCoreScrapers() {
@@ -58,10 +58,10 @@ async function loadCoreScrapers() {
       if (patchedText && activeVer >= BUNDLED_SCRAPER_VERSION) {
         scriptText = patchedText;
         isFromOtaPatch = true;
-        console.log(`[Mori] Loaded OTA patched scraper core v${activeVer}`);
+        console.log(`[Host-ia] Loaded OTA patched scraper core v${activeVer}`);
       }
     } catch (otaErr) {
-      console.warn("[Mori] OTA patch load warning:", otaErr);
+      console.warn("[Host-ia] OTA patch load warning:", otaErr);
     }
 
     try {
@@ -76,21 +76,21 @@ async function loadCoreScrapers() {
       );
       const mod = fn();
 
-      if (!mod) throw new Error("[Mori] Failed to instantiate core scraper modules.");
+      if (!mod) throw new Error("[Host-ia] Failed to instantiate core scraper modules.");
 
       window.__MoriCoreScrapers = mod;
-      console.log(`[Mori] Core scrapers ready (${isFromOtaPatch ? "OTA Patch" : "Bundled"} v${BUNDLED_SCRAPER_VERSION}).`);
+      console.log(`[Host-ia] Core scrapers ready (${isFromOtaPatch ? "OTA Patch" : "Bundled"} v${BUNDLED_SCRAPER_VERSION}).`);
       return mod;
     } catch (e) {
       // Safe-mode: corrupted OTA patch → clear and retry with bundled
       if (isFromOtaPatch) {
-        console.warn("[Mori] Corrupted OTA patch — resetting to bundled core.", e);
+        console.warn("[Host-ia] Corrupted OTA patch - resetting to bundled core.", e);
         localStorage.removeItem("mori_patched_scraper_bin");
         localStorage.removeItem("mori_active_scraper_version");
         _corePromise = null;
         return loadCoreScrapers();
       }
-      console.error("[Mori] Fatal init error:", e);
+      console.error("[Host-ia] Fatal init error:", e);
       if (typeof window.showFatalErrorModal === "function") {
         window.showFatalErrorModal(e.message || String(e));
       }
@@ -148,7 +148,7 @@ export async function scrapeDouyin(url, ...rest) {
         targetUrl = resolvedUrl;
       }
     } catch (e) {
-      console.warn("[Mori] Douyin resolver warning:", e);
+      console.warn("[Host-ia] Douyin resolver warning:", e);
     }
   }
 

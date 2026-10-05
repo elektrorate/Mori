@@ -10,6 +10,7 @@ test/
 !/test/
 /test/*
 !/test/drive.test.mjs
+!/test/branding.test.mjs
 
 # Capacitor & Android Specs
 android/local.properties

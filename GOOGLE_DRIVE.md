@@ -1,4 +1,4 @@
-# Google Drive: guardar solo en la nube
+# Host-ia: Google Drive
 
 La integracion esta implementada para Windows y Android. Esta desactivada por
 defecto. Los archivos se descargan a almacenamiento temporal privado, se suben
@@ -16,7 +16,7 @@ vuelve a comprobar el contenido antes de borrar, sin crear otra copia en Drive.
    de prueba necesarios.
 3. Windows: crear un cliente OAuth de tipo Aplicacion de escritorio. Restablecer
    cualquier secreto expuesto y descargar las credenciales actualizadas fuera
-   del repositorio. En Mori, Ajustes > Google Drive > Importar credenciales de
+   del repositorio. En Host-ia, Ajustes > Google Drive > Importar credenciales de
    Windows abre un selector nativo. Las credenciales se guardan en el gestor de
    credenciales de Windows, nunca en JavaScript ni localStorage.
 4. Android: registrar un cliente OAuth para `com.mori.downloader` y la huella

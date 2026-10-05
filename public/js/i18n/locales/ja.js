@@ -1,6 +1,6 @@
 export default {
   "about-text":
-    "Moriは高速で多機能なメディアダウンローダーです。coflynによって愛を込めて作られました。",
+    "Host-iaは高速で多機能なメディアダウンローダーです。coflynによって愛を込めて作られました。",
   "anim-fast": "速い",
   "anim-normal": "普通",
   "anim-off": "オフ",
@@ -110,11 +110,11 @@ export default {
   "history-unlimited": "無制限",
   "howtouse-steps": [
     "サポートされているプラットフォームからリンクをコピーします。",
-    "Moriに戻り、貼り付けボタンをタップします。",
+    "Host-iaに戻り、貼り付けボタンをタップします。",
     "分析が完了するまで待ちます。",
     "ダウンロードをタップして保存します。",
   ],
-  "label-about": "Moriについて",
+  "label-about": "Host-iaについて",
   "label-anim-speed": "アニメーション速度",
   "label-animated-bg": "動く背景",
   "label-auto-analyze": "貼り付け時に自動解析",
@@ -198,7 +198,7 @@ export default {
   "label-share-file": "ファイルを共有",
   "label-share-link": "リンクを共有",
   "label-share-media": "メディアを共有",
-  "label-shareapp": "Moriをシェアする",
+  "label-shareapp": "Host-iaをシェアする",
   "label-sound-pack": "完了サウンド",
   "label-speed": "速度",
   "label-storagesize": "合計メディアサイズ",
@@ -319,9 +319,9 @@ export default {
   "share-err-no-links": "ダウンロードリンクが見つかりませんでした。",
   "share-err-unsupported": "サポートされていないプラットフォームのリンクです。",
   "share-msg":
-    "どこからでもメディアをダウンロードできる素晴らしいアプリ、Moriをチェックしてください！ https://github.com/coflyn/Mori",
+    "どこからでもメディアをダウンロードできる素晴らしいアプリ、Host-iaをチェックしてください！ https://github.com/elektrorate/Mori",
   "share-panel-sub": "メディアの設定とダウンロード",
-  "share-panel-title": "Mori クイック保存",
+  "share-panel-title": "Host-ia クイック保存",
   "sound-chime": "モダンチャイム",
   "sound-droplet": "水滴",
   "sound-pop": "ソフトポップ",

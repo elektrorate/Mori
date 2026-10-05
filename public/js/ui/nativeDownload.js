@@ -170,7 +170,7 @@ export async function startNativeDownload(
   const isMultiDownload =
     window._moriPlaylistDownloading || window._moriActiveDownloadsCount > 1;
 
-  let effectiveTitle = title || "Mori Media";
+  let effectiveTitle = title || "Host-ia Media";
   const dlId = `dl_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   let itemCancelled = false;
 

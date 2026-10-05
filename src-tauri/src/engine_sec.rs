@@ -23,6 +23,6 @@ pub fn get_key(challenge: &str) -> Result<String, String> {
         let hex_str = std::str::from_utf8(&buf[..64]).map_err(|e| e.to_string())?;
         Ok(hex_str.to_string())
     } else {
-        Err("Mori Engine: Native security verification failed in core library.".into())
+        Err("Host-ia Engine: Native security verification failed in core library.".into())
     }
 }

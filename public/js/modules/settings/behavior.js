@@ -366,7 +366,7 @@ export function initBehaviorSettings() {
         if (CapacitorHttp) {
           await CapacitorHttp.get({
             url: "https://api.github.com/zen",
-            headers: { "User-Agent": "Mori-App" },
+            headers: { "User-Agent": "Host-ia-App" },
           });
         } else {
           await fetch("https://api.github.com/zen");

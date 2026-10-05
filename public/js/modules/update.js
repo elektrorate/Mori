@@ -46,7 +46,7 @@ async function fetchLatestRelease() {
       url: UPDATE_CHECK_URL,
       headers: {
         Accept: "application/vnd.github+json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Host-ia-App",
       },
     });
     data = typeof res.data === "string" ? JSON.parse(res.data) : res.data;
@@ -56,7 +56,7 @@ async function fetchLatestRelease() {
       method: "GET",
       headers: {
         Accept: "application/vnd.github+json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Host-ia-App",
       },
     });
     const rawData = res?.data || res?.body || res;
@@ -86,7 +86,7 @@ export async function checkUpdate() {
         const el = document.getElementById("manualUpdateLink");
         if (el)
           el.onclick = () => {
-            openExternalUrl(REPO_URL);
+            openExternalUrl("https://github.com/elektrorate/Mori/releases");
           };
       }, 50);
     } else {
@@ -127,7 +127,7 @@ export async function autoCheckUpdate() {
         const el = document.getElementById("autoUpdateLink");
         if (el)
           el.onclick = () => {
-            openExternalUrl(REPO_URL);
+            openExternalUrl("https://github.com/elektrorate/Mori/releases");
           };
       }, 50);
     }
@@ -152,25 +152,28 @@ howToUseBtn?.addEventListener("click", () => {
 
 aboutAppBtn?.addEventListener("click", () => {
   const lang = translations[currentLang];
-  showInfoModal(lang["label-about"], lang["about-text"]);
+  showInfoModal(
+    lang["label-about"],
+    `<img class="brand-logo about-brand-logo" src="assets/logo.svg" alt="Host-ia" width="96" height="96" />${lang["about-text"]}`,
+  );
 });
 
 shareAppBtn?.addEventListener("click", async () => {
   const lang = translations[currentLang];
   if (window.Capacitor?.isNativePlatform?.() && Share) {
     await Share.share({
-      title: "Mori App",
+      title: "Host-ia App",
       text: lang["share-msg"],
-      url: "https://github.com/coflyn/Mori",
-      dialogTitle: "Share Mori",
+      url: REPO_URL,
+      dialogTitle: "Share Host-ia",
     });
   } else {
     // Fallback for web
     if (navigator.share) {
       navigator.share({
-        title: "Mori App",
+        title: "Host-ia App",
         text: lang["share-msg"],
-        url: "https://github.com/coflyn/Mori",
+        url: REPO_URL,
       });
     } else {
       showToast(t("toast-share-not-supported"));

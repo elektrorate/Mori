@@ -38,7 +38,7 @@ async function fetchRemoteJson(url) {
       url,
       headers: {
         Accept: "application/json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Host-ia-App",
         "Cache-Control": "no-cache",
       },
     });
@@ -49,7 +49,7 @@ async function fetchRemoteJson(url) {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "User-Agent": "Mori-App",
+        "User-Agent": "Host-ia-App",
         "Cache-Control": "no-cache",
       },
     });
@@ -70,14 +70,14 @@ async function fetchRemoteText(url) {
   if (CapacitorHttp) {
     const res = await CapacitorHttp.get({
       url,
-      headers: { "Cache-Control": "no-cache", "User-Agent": "Mori-App" },
+      headers: { "Cache-Control": "no-cache", "User-Agent": "Host-ia-App" },
     });
     return typeof res.data === "string" ? res.data : JSON.stringify(res.data);
   } else if (tauriInvoke) {
     const res = await tauriInvoke("tauri_http_request", {
       url,
       method: "GET",
-      headers: { "Cache-Control": "no-cache", "User-Agent": "Mori-App" },
+      headers: { "Cache-Control": "no-cache", "User-Agent": "Host-ia-App" },
     });
     const rawData = res?.data || res?.body || res;
     return typeof rawData === "string" ? rawData : JSON.stringify(rawData);
@@ -173,7 +173,7 @@ export async function checkScraperUpdate(isManual = false) {
                 window.location.reload();
               }, 600);
             } catch (err) {
-              console.error("[Mori Scrapers OTA] Patch apply failed:", err);
+              console.error("[Host-ia Scrapers OTA] Patch apply failed:", err);
               btn.disabled = false;
               btn.textContent = lang["btn-update"] || "UPDATE NOW";
               showToast?.("Failed to download scraper update");
@@ -208,7 +208,7 @@ export async function checkScraperUpdate(isManual = false) {
       }
     }
   } catch (err) {
-    console.warn("[Mori Scrapers OTA] Check failed:", err);
+    console.warn("[Host-ia Scrapers OTA] Check failed:", err);
     if (actionLabel) actionLabel.textContent = origText;
     if (isManual) {
       const lang = translations[currentLang] || {};

@@ -214,7 +214,7 @@ async fn tauri_download_file(
     std::fs::create_dir_all(&target_dir).map_err(|e| format!("Directory error: {}", e))?;
     let (stem, ext) = {
         let p = std::path::Path::new(&filename);
-        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Media");
+        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Host-ia_Media");
         let e = p.extension().and_then(|s| s.to_str()).unwrap_or("mp4").to_lowercase();
         (s.to_string(), e)
     };
@@ -385,7 +385,7 @@ async fn tauri_save_bytes_file(
     std::fs::create_dir_all(&target_dir).map_err(|e| format!("Directory error: {}", e))?;
     let (stem, ext) = {
         let p = std::path::Path::new(&filename);
-        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Mori_Document");
+        let s = p.file_stem().and_then(|s| s.to_str()).unwrap_or("Host-ia_Document");
         let e = p.extension().and_then(|s| s.to_str()).unwrap_or("pdf").to_lowercase();
         (s.to_string(), e)
     };

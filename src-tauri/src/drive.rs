@@ -118,7 +118,7 @@ pub fn action(
     let root = app
         .path()
         .app_data_dir()
-        .map_err(|_| "Cannot locate Mori application data.".to_string())?
+        .map_err(|_| "Cannot locate Host-ia application data.".to_string())?
         .join("drive");
     fs::create_dir_all(root.join("jobs"))
         .map_err(|_| "Cannot create durable Drive staging.".to_string())?;
@@ -662,7 +662,7 @@ fn oauth_callback(listener: TcpListener, state: &str) -> Result<(String, String)
                     continue;
                 }
                 let body =
-                    "Mori received the Google response. You can close this tab and return to Mori.";
+                    "Host-ia received the Google response. You can close this tab and return to Host-ia.";
                 let _ = write!(stream, "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nCache-Control: no-store\r\nConnection: close\r\nContent-Length: {}\r\n\r\n{}", body.len(), body);
                 if one("error").is_some() {
                     return Err("Google authorization was denied or cancelled.".into());
@@ -992,7 +992,7 @@ fn download(options: &Value, file: &mut File) -> Result<(), String> {
         .redirect(reqwest::redirect::Policy::limited(10))
         .connect_timeout(Duration::from_secs(30))
         .timeout(Duration::from_secs(3600))
-        .user_agent("Mori/4.4")
+        .user_agent("Host-ia/4.4.1")
         .build()
         .map_err(|_| "Cannot initialize native download networking.".to_string())?;
     let mut request = client.get(url);

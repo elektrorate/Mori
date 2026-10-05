@@ -357,7 +357,7 @@ final class MoriDriveBackend {
             }
         } else {
             Request.Builder request = new Request.Builder().url(https(job.getString("url")))
-                .header("User-Agent", "Mori/Android");
+                .header("User-Agent", "Host-ia/Android");
             JSONObject headers = job.getJSONObject("headers");
             Iterator<String> names = headers.keys();
             while (names.hasNext()) {
@@ -639,7 +639,7 @@ final class MoriDriveBackend {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (manager == null) return;
             if (Build.VERSION.SDK_INT >= 26) manager.createNotificationChannel(new NotificationChannel(
-                "mori_drive", "Mori Drive uploads", NotificationManager.IMPORTANCE_DEFAULT));
+                "mori_drive", "Host-ia Drive uploads", NotificationManager.IMPORTANCE_DEFAULT));
             Intent view = new Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://drive.google.com/file/d/" + job.getString("fileId") + "/view"));
             PendingIntent open = PendingIntent.getActivity(context, job.getString("jobId").hashCode(), view,

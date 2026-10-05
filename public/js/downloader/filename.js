@@ -49,7 +49,7 @@ export function sanitizeTitle(title, type) {
     .trim();
   const isTrackType = /^\d+\.\s+/.test(cleanTypeLabel);
 
-  let effectiveTitle = title || "Mori Media";
+  let effectiveTitle = title || "Host-ia Media";
   if (isTrackType) {
     effectiveTitle =
       cleanTypeLabel.replace(/^\d+\.\s+/, "").trim() || cleanTypeLabel;
@@ -62,7 +62,7 @@ export function sanitizeTitle(title, type) {
     .replace(/\s+/g, " ")
     .substring(0, 60);
 
-  return sanitized || "Mori_Media";
+  return sanitized || "Host-ia_Media";
 }
 
 export function generateFileName(sanitizedTitle, ext, sourceUrl, url) {
